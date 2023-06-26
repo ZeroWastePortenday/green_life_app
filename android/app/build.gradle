@@ -21,7 +21,24 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def signingProperties = new Properties()
+def signingPropertiesFile = rootProject.file('signing.properties')
+if (signingPropertiesFile.exists()) {
+    signingPropertiesFile.withReader('UTF-8') {
+        signingProperties.load(it)
+    }
+}
+
+def _keyAlias = signingProperties.getProperty('key.alias')
+def _keyPassword = signingProperties.getProperty('key.password')
+def _storePassword = signingProperties.getProperty('store.password')
+def kakaoApiKey = signingProperties.getProperty('kakao.api.key')
+
 apply plugin: 'com.android.application'
+// START: FlutterFire Configuration
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+// END: FlutterFire Configuration
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
@@ -44,21 +61,28 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.potenday.green_life_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion 24
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders.KAKAO_API_KEY = kakaoApiKey
+    }
+
+    signingConfigs {
+        release {
+            keyAlias _keyAlias
+            keyPassword _keyPassword
+            storeFile file('../greenlife.jks')
+            storePassword _storePassword
+        }
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            shrinkResources true
+            minifyEnabled true
+            signingConfig signingConfigs.release
         }
     }
 }

@@ -1,37 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:green_life_app/initial_settings.dart';
+import 'package:green_life_app/ui/view/login_view.dart';
 
-// 우리는 값을 저장할 "provider"를 만들겁니다(여기서 값은 "Hello world"를 의미합니다).
-// 프로바이더를 사용하는 것으로 값의 mock/override가 가능하게 됩니다.
-final helloWorldProvider = Provider((_) => 'Hello world');
-
-void main() {
+Future<void> main() async {
+  await initSettings();
   runApp(
-    // 위젯에서 프로바이더를 사용하고 읽기위해
-    // 앱 전체적으로 "ProviderScope" 위젯을 감싸줘야 합니다.
-    // 여기에 프로바이더의 상태가 저장됩니다.
-    const ProviderScope(
-      child: MyApp(),
+    ProviderScope(
+      child: ScreenUtilInit(
+        minTextAdapt: true,
+        builder: (BuildContext context, Widget? child) {
+          return const MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: LoginView(),
+          );
+        },
+      ),
     ),
   );
-}
-
-// StatelessWidget 대신에 Riverpod의 ConsumerWidget을 상속받아 사용합니다.
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final value = ref.watch(helloWorldProvider);
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Example')),
-        body: Center(
-          child: Text(value),
-        ),
-      ),
-    );
-  }
 }

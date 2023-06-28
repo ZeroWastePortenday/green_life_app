@@ -12,12 +12,33 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/apple_logo.png
+  AssetGenImage get appleLogo =>
+      const AssetGenImage('assets/images/apple_logo.png');
+
+  /// File path: assets/images/google_logo.png
+  AssetGenImage get googleLogo =>
+      const AssetGenImage('assets/images/google_logo.png');
+
+  /// File path: assets/images/kakao_logo.png
+  AssetGenImage get kakaoLogo =>
+      const AssetGenImage('assets/images/kakao_logo.png');
+
+  /// File path: assets/images/login_logo.png
+  AssetGenImage get loginLogo =>
+      const AssetGenImage('assets/images/login_logo.png');
+
+  /// File path: assets/images/naver_logo.png
+  AssetGenImage get naverLogo =>
+      const AssetGenImage('assets/images/naver_logo.png');
+
   /// File path: assets/images/splash_logo.png
   AssetGenImage get splashLogo =>
       const AssetGenImage('assets/images/splash_logo.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [splashLogo];
+  List<AssetGenImage> get values =>
+      [appleLogo, googleLogo, kakaoLogo, loginLogo, naverLogo, splashLogo];
 }
 
 class Assets {

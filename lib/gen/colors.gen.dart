@@ -13,6 +13,15 @@ import 'package:flutter/material.dart';
 class ColorName {
   ColorName._();
 
+  /// Color: #FEE500
+  static const Color kakao = Color(0xFFFEE500);
+
+  /// Color: #EAEAEA
+  static const Color loginBorder = Color(0xFFEAEAEA);
+
+  /// Color: #03C75A
+  static const Color naver = Color(0xFF03C75A);
+
   /// Color: #33C1E2
   static const Color primaryColor = Color(0xFF33C1E2);
 }

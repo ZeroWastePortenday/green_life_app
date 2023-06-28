@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:green_life_app/provider/login/apple_login.dart';
 import 'package:green_life_app/provider/login/google_login.dart';
@@ -49,6 +51,13 @@ class LoginProvider extends StateNotifier<LoginState> {
   // ignore: avoid_positional_boolean_parameters
   Future<void> sendResult(bool isSuccess) async {
     if (isSuccess) {
+      unawaited(
+        FirebaseAuth.instance.currentUser
+            ?.getIdToken()
+            .then((token) {
+          Clipboard.setData(ClipboardData(text: token));
+        }),
+      );
       Log.i('로그인 성공');
     } else {
       Log.e('login fail');

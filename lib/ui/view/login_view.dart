@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:green_life_app/gen/assets.gen.dart';
+import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/provider/login/login_provider.dart';
 import 'package:green_life_app/provider/login/login_type.dart';
-import 'package:green_life_app/provider/login/logout.dart';
+import 'package:green_life_app/ui/widgets/buttons/apple/apple_login_button.dart';
 
 class LoginView extends ConsumerWidget {
   const LoginView({super.key});
@@ -10,40 +15,141 @@ class LoginView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: Center(
+      backgroundColor: Colors.white,
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                ref.read(loginProvider.notifier).login(LoginType.google);
-              },
-              child: const Text('구글 로그인'),
+            Column(
+              children: [
+                SizedBox(height: 307.h,),
+                SizedBox(
+                  width: 119.w,
+                  height: 30.h,
+                  child: Center(
+                    child: Text(
+                      '지구를 살리는 선택',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Assets.images.loginLogo.image(),
+              ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                ref.read(loginProvider.notifier).login(LoginType.kakao);
-              },
-              child: const Text('카카오 로그인'),
+            Padding(
+              padding: EdgeInsets.only(bottom: 60.h),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  loginButton(
+                    backgroundColor: ColorName.kakao,
+                    onTap: () =>
+                        ref.read(loginProvider.notifier).login(LoginType.kakao),
+                    text: '카카오로 로그인',
+                    textColor: Colors.black,
+                    iconImage: Assets.images.kakaoLogo.image(),
+                  ),
+                  SizedBox(height: 12.h),
+                  loginButton(
+                    backgroundColor: ColorName.naver,
+                    onTap: () =>
+                        ref.read(loginProvider.notifier).login(LoginType.naver),
+                    text: '네이버로 로그인',
+                    textColor: Colors.white,
+                    iconImage: Assets.images.naverLogo.image(),
+                  ),
+                  SizedBox(height: 12.h),
+                  loginButton(
+                    backgroundColor: Colors.white,
+                    onTap: () =>
+                        ref.read(loginProvider.notifier).login(LoginType.google),
+                    text: 'Google로 로그인',
+                    textColor: Colors.black,
+                    iconImage: Assets.images.googleLogo.image(),
+                    hasBorder: true,
+                  ),
+                  Builder(
+                    builder: (_) {
+                      if (Platform.isIOS) {
+                        return Column(
+                          children: [
+                            SizedBox(height: 12.h),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              child: SignInWithAppleButton(
+                                onPressed: () => ref
+                                    .read(loginProvider.notifier)
+                                    .login(LoginType.apple),
+                                height: 40,
+                                text: 'Apple로 로그인',
+                                iconAlignment: IconAlignment.left,
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                ref.read(loginProvider.notifier).login(LoginType.naver);
-              },
-              child: const Text('네이버 로그인'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  BoxDecoration loginBoxDecoration(Color backgroundColor, {bool? hasBorder}) {
+    return BoxDecoration(
+      color: backgroundColor,
+      borderRadius: BorderRadius.circular(4),
+      border: (hasBorder ?? false)
+          ? Border.all(
+              color: ColorName.loginBorder,
+            )
+          : null,
+    );
+  }
+
+  GestureDetector loginButton({
+    required Color backgroundColor,
+    required void Function() onTap,
+    required String text,
+    required Color textColor,
+    required Image iconImage,
+    bool? hasBorder,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: loginBoxDecoration(backgroundColor, hasBorder: hasBorder),
+        width: 320.w,
+        height: 40.h,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 18),
+                child: iconImage,
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                ref.read(loginProvider.notifier).login(LoginType.apple);
-              },
-              child: const Text('Apple 로그인'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                logout(() {});
-              },
-              child: const Text('로그아웃'),
-            ),
+            Center(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: textColor,
+                ),
+              ),
+            )
           ],
         ),
       ),

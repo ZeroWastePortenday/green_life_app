@@ -29,6 +29,7 @@ dependencies:
   kakao_flutter_sdk_user: ^1.4.3
   google_sign_in: ^6.1.4
   flutter_naver_login: ^1.8.0
+  sign_in_with_apple: ^5.0.0
 
   ## Network
   http: ^1.1.0
@@ -58,3 +59,21 @@ flutter:
   uses-material-design: true
   assets:
     - .env
+    - assets/images/
+
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/Pretendard/Pretendard-Thin.otf
+          weight: 200
+        - asset: assets/fonts/Pretendard/Pretendard-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Pretendard/Pretendard-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Pretendard/Pretendard-Bold.otf
+          weight: 700
+
+flutter_gen:
+  colors:
+    inputs:
+      - assets/color/colors.xml

@@ -34,6 +34,12 @@ class LoginView extends ConsumerWidget {
             ),
             ElevatedButton(
               onPressed: () {
+                ref.read(loginProvider.notifier).login(LoginType.apple);
+              },
+              child: const Text('Apple 로그인'),
+            ),
+            ElevatedButton(
+              onPressed: () {
                 logout(() {});
               },
               child: const Text('로그아웃'),

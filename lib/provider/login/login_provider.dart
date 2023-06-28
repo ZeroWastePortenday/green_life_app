@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:green_life_app/provider/login/apple_login.dart';
 import 'package:green_life_app/provider/login/google_login.dart';
 import 'package:green_life_app/provider/login/kakao_login.dart';
 import 'package:green_life_app/provider/login/login_state.dart';
@@ -33,8 +34,7 @@ class LoginProvider extends StateNotifier<LoginState> {
       case LoginType.google:
         Google.login().then(sendResult);
       case LoginType.apple:
-        // Apple.login().then(sendResult);
-        break;
+        Apple.login().then(sendResult);
       case LoginType.kakao:
         Kakao.login().then(sendResult);
       case LoginType.naver:
@@ -50,22 +50,6 @@ class LoginProvider extends StateNotifier<LoginState> {
   Future<void> sendResult(bool isSuccess) async {
     if (isSuccess) {
       Log.i('로그인 성공');
-      // final user = await userApi.postUsers();
-      //
-      // user.when(
-      //   success: (data) {
-      //     if (data.is_new == false) {
-      //       // 1. 공유패널 데이터 가져오기
-      //       ShareDataProvider.loadServerData();
-      //     }
-      //
-      //     // 2. 로그인 이후 화면으로 이동
-      //     emit(LoginLoadedState(data));
-      //   },
-      //   error: (msg) {
-      //     emit(LoginErrorState(msg));
-      //   },
-      // );
     } else {
       Log.e('login fail');
       state = LoginErrorState('login fail');

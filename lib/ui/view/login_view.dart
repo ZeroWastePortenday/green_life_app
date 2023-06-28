@@ -24,7 +24,6 @@ class LoginView extends ConsumerWidget {
               children: [
                 SizedBox(height: 307.h,),
                 SizedBox(
-                  width: 119.w,
                   height: 30.h,
                   child: Center(
                     child: Text(
@@ -42,61 +41,63 @@ class LoginView extends ConsumerWidget {
             ),
             Padding(
               padding: EdgeInsets.only(bottom: 60.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  loginButton(
-                    backgroundColor: ColorName.kakao,
-                    onTap: () =>
-                        ref.read(loginProvider.notifier).login(LoginType.kakao),
-                    text: '카카오로 로그인',
-                    textColor: Colors.black,
-                    iconImage: Assets.images.kakaoLogo.image(),
-                  ),
-                  SizedBox(height: 12.h),
-                  loginButton(
-                    backgroundColor: ColorName.naver,
-                    onTap: () =>
-                        ref.read(loginProvider.notifier).login(LoginType.naver),
-                    text: '네이버로 로그인',
-                    textColor: Colors.white,
-                    iconImage: Assets.images.naverLogo.image(),
-                  ),
-                  SizedBox(height: 12.h),
-                  loginButton(
-                    backgroundColor: Colors.white,
-                    onTap: () =>
-                        ref.read(loginProvider.notifier).login(LoginType.google),
-                    text: 'Google로 로그인',
-                    textColor: Colors.black,
-                    iconImage: Assets.images.googleLogo.image(),
-                    hasBorder: true,
-                  ),
-                  Builder(
-                    builder: (_) {
-                      if (Platform.isIOS) {
-                        return Column(
-                          children: [
-                            SizedBox(height: 12.h),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.w),
-                              child: SignInWithAppleButton(
-                                onPressed: () => ref
-                                    .read(loginProvider.notifier)
-                                    .login(LoginType.apple),
-                                height: 40,
-                                text: 'Apple로 로그인',
-                                iconAlignment: IconAlignment.left,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    loginButton(
+                      backgroundColor: ColorName.kakao,
+                      onTap: () =>
+                          ref.read(loginProvider.notifier).login(LoginType.kakao),
+                      text: '카카오로 로그인',
+                      textColor: Colors.black,
+                      iconImage: Assets.images.kakaoLogo.image(),
+                    ),
+                    SizedBox(height: 12.h),
+                    loginButton(
+                      backgroundColor: ColorName.naver,
+                      onTap: () =>
+                          ref.read(loginProvider.notifier).login(LoginType.naver),
+                      text: '네이버로 로그인',
+                      textColor: Colors.white,
+                      iconImage: Assets.images.naverLogo.image(),
+                    ),
+                    SizedBox(height: 12.h),
+                    loginButton(
+                      backgroundColor: Colors.white,
+                      onTap: () =>
+                          ref.read(loginProvider.notifier).login(LoginType.google),
+                      text: 'Google로 로그인',
+                      textColor: Colors.black,
+                      iconImage: Assets.images.googleLogo.image(),
+                      hasBorder: true,
+                    ),
+                    Builder(
+                      builder: (_) {
+                        if (Platform.isIOS) {
+                          return Column(
+                            children: [
+                              SizedBox(height: 12.h),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                child: SignInWithAppleButton(
+                                  onPressed: () => ref
+                                      .read(loginProvider.notifier)
+                                      .login(LoginType.apple),
+                                  height: 40,
+                                  text: 'Apple로 로그인',
+                                  iconAlignment: IconAlignment.left,
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  ),
-                ],
+                            ],
+                          );
+                        } else {
+                          return SizedBox(height: 52.h,);
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

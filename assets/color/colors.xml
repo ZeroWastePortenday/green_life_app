@@ -4,4 +4,8 @@
     <color name="loginBorder">#EAEAEA</color>
     <color name="kakao">#FEE500</color>
     <color name="naver">#03C75A</color>
+
+    <color name="greyEA">#EAEAEA</color>
+    <color name="greyF3">#F3F3F3</color>
+    <color name="grey94">#949494</color>
 </resources>

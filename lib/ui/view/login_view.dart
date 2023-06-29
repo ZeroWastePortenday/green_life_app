@@ -22,7 +22,10 @@ class LoginView extends ConsumerWidget {
           children: [
             Column(
               children: [
-                SizedBox(height: 307.h,),
+                Padding(
+                  padding: EdgeInsets.only(top: 66.h, bottom: 34.h),
+                  child: Assets.images.loginImage.image(),
+                ),
                 SizedBox(
                   height: 30.h,
                   child: Center(
@@ -84,7 +87,7 @@ class LoginView extends ConsumerWidget {
                                   onPressed: () => ref
                                       .read(loginProvider.notifier)
                                       .login(LoginType.apple),
-                                  height: 40,
+                                  height: 48,
                                   text: 'Apple로 로그인',
                                   iconAlignment: IconAlignment.left,
                                 ),
@@ -131,7 +134,7 @@ class LoginView extends ConsumerWidget {
       child: Container(
         decoration: loginBoxDecoration(backgroundColor, hasBorder: hasBorder),
         width: 320.w,
-        height: 40.h,
+        height: 48,
         child: Stack(
           children: [
             Align(

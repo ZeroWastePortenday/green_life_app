@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:green_life_app/ui/view/login_view.dart';
+import 'package:green_life_app/ui/view/sign_up_view.dart';
 import 'package:green_life_app/ui/view/splash_view.dart';
 
 class Routes {
@@ -21,6 +22,8 @@ class Pages {
         return router.create(child: const SplashView());
       case Routes.login:
         return router.create(child: const LoginView());
+      case Routes.signUp:
+        return router.create(child: const SignUpView());
     }
     return null;
   }

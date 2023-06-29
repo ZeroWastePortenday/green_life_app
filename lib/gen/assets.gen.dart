@@ -16,6 +16,9 @@ class $AssetsImagesGen {
   AssetGenImage get appleLogo =>
       const AssetGenImage('assets/images/apple_logo.png');
 
+  /// File path: assets/images/back_button.svg
+  String get backButton => 'assets/images/back_button.svg';
+
   /// File path: assets/images/google_logo.png
   AssetGenImage get googleLogo =>
       const AssetGenImage('assets/images/google_logo.png');
@@ -23,6 +26,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/kakao_logo.png
   AssetGenImage get kakaoLogo =>
       const AssetGenImage('assets/images/kakao_logo.png');
+
+  /// File path: assets/images/login_image.png
+  AssetGenImage get loginImage =>
+      const AssetGenImage('assets/images/login_image.png');
 
   /// File path: assets/images/login_logo.png
   AssetGenImage get loginLogo =>
@@ -37,8 +44,16 @@ class $AssetsImagesGen {
       const AssetGenImage('assets/images/splash_logo.png');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [appleLogo, googleLogo, kakaoLogo, loginLogo, naverLogo, splashLogo];
+  List<dynamic> get values => [
+        appleLogo,
+        backButton,
+        googleLogo,
+        kakaoLogo,
+        loginImage,
+        loginLogo,
+        naverLogo,
+        splashLogo
+      ];
 }
 
 class Assets {

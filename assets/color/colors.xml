@@ -8,4 +8,6 @@
     <color name="greyEA">#EAEAEA</color>
     <color name="greyF3">#F3F3F3</color>
     <color name="grey94">#949494</color>
+
+    <color name="home_image_background">#F8FEFF</color>
 </resources>

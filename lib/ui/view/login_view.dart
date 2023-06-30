@@ -6,7 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/provider/login/login_provider.dart';
+import 'package:green_life_app/provider/login/login_state.dart';
 import 'package:green_life_app/provider/login/login_type.dart';
+import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/ui/widgets/buttons/apple/apple_login_button.dart';
 
 class LoginView extends ConsumerWidget {
@@ -14,6 +16,13 @@ class LoginView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    ref.listen(loginProvider, (previous, next) {
+      if (next is LoginLoadedState) {
+        Navigator.pushNamed(context, Routes.signUp);
+      }
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

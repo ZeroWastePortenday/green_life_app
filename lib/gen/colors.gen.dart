@@ -22,6 +22,9 @@ class ColorName {
   /// Color: #F3F3F3
   static const Color greyF3 = Color(0xFFF3F3F3);
 
+  /// Color: #F8FEFF
+  static const Color homeImageBackground = Color(0xFFF8FEFF);
+
   /// Color: #FEE500
   static const Color kakao = Color(0xFFFEE500);
 

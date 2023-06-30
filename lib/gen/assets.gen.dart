@@ -23,6 +23,10 @@ class $AssetsImagesGen {
   AssetGenImage get googleLogo =>
       const AssetGenImage('assets/images/google_logo.png');
 
+  /// File path: assets/images/home_text_logo.png
+  AssetGenImage get homeTextLogo =>
+      const AssetGenImage('assets/images/home_text_logo.png');
+
   /// File path: assets/images/kakao_logo.png
   AssetGenImage get kakaoLogo =>
       const AssetGenImage('assets/images/kakao_logo.png');
@@ -35,9 +39,15 @@ class $AssetsImagesGen {
   AssetGenImage get loginLogo =>
       const AssetGenImage('assets/images/login_logo.png');
 
+  /// File path: assets/images/mypage_icon.svg
+  String get mypageIcon => 'assets/images/mypage_icon.svg';
+
   /// File path: assets/images/naver_logo.png
   AssetGenImage get naverLogo =>
       const AssetGenImage('assets/images/naver_logo.png');
+
+  /// File path: assets/images/right_arrow.svg
+  String get rightArrow => 'assets/images/right_arrow.svg';
 
   /// File path: assets/images/splash_logo.png
   AssetGenImage get splashLogo =>
@@ -48,10 +58,13 @@ class $AssetsImagesGen {
         appleLogo,
         backButton,
         googleLogo,
+        homeTextLogo,
         kakaoLogo,
         loginImage,
         loginLogo,
+        mypageIcon,
         naverLogo,
+        rightArrow,
         splashLogo
       ];
 }

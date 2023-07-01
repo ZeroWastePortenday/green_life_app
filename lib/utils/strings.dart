@@ -13,3 +13,24 @@ bool validateNicknameInput(String? input) {
     return false; // 유효하지 않은 형식입니다.
   }
 }
+
+// get today's year and month and day
+String getTodayYearMonthDay() {
+  final now = DateTime.now();
+  final year = now.year.toString();
+  final month = now.month.toString();
+  final day = now.day.toString();
+  return '$year년 $month월 $day일';
+}
+
+// get today's year and month
+String getTodayYearMonth(DateTime dateTime) {
+  final year = dateTime.year.toString();
+  final month = dateTime.month.toString();
+  return '$year년 $month월';
+}
+
+// 일요일 부터 월요일까지 요일만 String List로 반환
+List<String> getDayOfWeekList() {
+  return ['일', '월', '화', '수', '목', '금', '토'];
+}

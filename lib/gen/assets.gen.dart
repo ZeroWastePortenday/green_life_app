@@ -12,6 +12,10 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/alert_image.png
+  AssetGenImage get alertImage =>
+      const AssetGenImage('assets/images/alert_image.png');
+
   /// File path: assets/images/apple_logo.png
   AssetGenImage get appleLogo =>
       const AssetGenImage('assets/images/apple_logo.png');
@@ -55,6 +59,7 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
+        alertImage,
         appleLogo,
         backButton,
         googleLogo,

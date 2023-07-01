@@ -13,14 +13,26 @@ import 'package:flutter/material.dart';
 class ColorName {
   ColorName._();
 
+  /// Color: #83DB7D
+  static const Color green = Color(0xFF83DB7D);
+
+  /// Color: #EAFFE8
+  static const Color greenBackground = Color(0xFFEAFFE8);
+
   /// Color: #949494
   static const Color grey94 = Color(0xFF949494);
 
   /// Color: #EAEAEA
   static const Color greyEA = Color(0xFFEAEAEA);
 
+  /// Color: #F2F2F2
+  static const Color greyF2 = Color(0xFFF2F2F2);
+
   /// Color: #F3F3F3
   static const Color greyF3 = Color(0xFFF3F3F3);
+
+  /// Color: #F6F6F6
+  static const Color greyF6 = Color(0xFFF6F6F6);
 
   /// Color: #F8FEFF
   static const Color homeImageBackground = Color(0xFFF8FEFF);
@@ -36,4 +48,7 @@ class ColorName {
 
   /// Color: #33C1E2
   static const Color primaryColor = Color(0xFF33C1E2);
+
+  /// Color: #F4FAF6
+  static const Color registerBackground = Color(0xFFF4FAF6);
 }

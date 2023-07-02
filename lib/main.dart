@@ -9,7 +9,6 @@ import 'package:green_life_app/routes.dart';
 
 Future<void> main() async {
   await initSettings();
-  debugRepaintRainbowEnabled = true;
   runApp(
     ProviderScope(
       child: ScreenUtilInit(

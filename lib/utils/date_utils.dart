@@ -3,9 +3,10 @@ import 'package:green_life_app/utils/logger.dart';
 
 List<DateTime> getThisWeekDateList({DateTime? selectedTime}) {
   final today = selectedTime ?? DateTime.now();
-  final firstDayOfWeek = today.subtract(Duration(days: today.weekday));
+  final weekday = today.weekday == 7 ? 0 : today.weekday;
+  final firstDayOfWeek = today.subtract(Duration(days: weekday));
   final lastDayOfWeek =
-      today.add(Duration(days: DateTime.daysPerWeek - today.weekday));
+      today.add(Duration(days: DateTime.daysPerWeek - weekday));
   return List.generate(
     lastDayOfWeek.difference(firstDayOfWeek).inDays,
     (index) => firstDayOfWeek.add(Duration(days: index)),

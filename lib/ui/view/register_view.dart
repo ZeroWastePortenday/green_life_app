@@ -55,28 +55,62 @@ class RegisterViewState extends ConsumerState<RegisterView> {
       '10. 더미 더미 더미 텍스트가 들어갑니다.',
     ];
 
-    return RepaintBoundary(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          bottom: false,
-          child: Column(
-            children: [
-              TopBar(todayYearMonth),
-              ColoredBox(
-                color: Colors.white,
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: widgetList,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            TopBar(todayYearMonth),
+            ColoredBox(
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: widgetList,
+                ),
+              ),
+            ),
+            const Divider(thickness: 1, height: 1, color: ColorName.greyF2),
+            ListBody(questionList),
+          ],
+        ),
+      ),
+      bottomSheet: ColoredBox(
+        color: ColorName.registerBackground,
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: 60.h,
+            left: 20.w,
+            right: 20.w,
+            top: 10.h,
+          ),
+          child: GestureDetector(
+            onTap: () {
+              final checkList = ref.read(registerCheckProvider);
+              Log.i(checkList);
+            },
+            child: Container(
+              width: double.infinity,
+              height: 60.h,
+              decoration: BoxDecoration(
+                color: ColorName.green,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(8.r),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  '저장',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const Divider(thickness: 1, height: 1, color: ColorName.greyF2),
-              ListBody(questionList),
-            ],
+            ),
           ),
         ),
       ),
@@ -93,46 +127,16 @@ class RegisterViewState extends ConsumerState<RegisterView> {
             child: Padding(
               padding: EdgeInsets.only(top: 24.h, left: 20.w, right: 20.w),
               child: ListView.builder(
-                itemCount: 10 + 1,
+                itemCount: questionList.length,
                 itemBuilder: (ctx, i) {
-                  if (i == 10) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        top: 20.h,
-                        bottom: 60.h,
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          final checkList = ref.read(registerCheckProvider);
-                          Log.i(checkList);
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: 60.h,
-                          decoration: BoxDecoration(
-                            color: ColorName.green,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.r),
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '저장',
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }
                   return Column(
                     children: [
                       CheckListItem(questionList, i),
                       SizedBox(height: 14.h),
+                      if (i == questionList.length - 1)
+                        SizedBox(height: 120.h)
+                      else
+                        const SizedBox.shrink(),
                     ],
                   );
                 },

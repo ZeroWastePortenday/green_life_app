@@ -81,7 +81,14 @@ flutter:
           weight: 600
         - asset: assets/fonts/Pretendard/Pretendard-Bold.otf
           weight: 700
-
+    - family: GmarketSans
+      fonts:
+        - asset: assets/fonts/GmarketSans/GmarketSansLight.otf
+          weight: 300
+        - asset: assets/fonts/GmarketSans/GmarketSansMedium.otf
+          weight: 500
+        - asset: assets/fonts/GmarketSans/GmarketSansBold.otf
+          weight: 700
 flutter_gen:
   colors:
     inputs:

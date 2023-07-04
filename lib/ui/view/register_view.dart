@@ -35,7 +35,6 @@ class RegisterViewState extends ConsumerState<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    final todayYearMonth = getTodayYearMonth(selectedDateTime);
     final dayOfWeekList = getDayOfWeekList();
     final thisWeekList = getThisWeekDateList();
 
@@ -61,7 +60,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
         bottom: false,
         child: Column(
           children: [
-            TopBar(todayYearMonth),
+            TopBar(),
             ColoredBox(
               color: Colors.white,
               child: Padding(
@@ -184,14 +183,19 @@ class RegisterViewState extends ConsumerState<RegisterView> {
     );
   }
 
-  ColoredBox TopBar(String todayYearMonth) {
+  ColoredBox TopBar() {
+    final todayYearMonth = getTodayYearMonth(dateTime: selectedDateTime);
     return ColoredBox(
-        color: Colors.white,
-        child: Padding(
-          padding: EdgeInsets.only(left: 20.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      color: Colors.white,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
             children: [
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: SvgPicture.asset(Assets.images.backButton),
+              ),
               Text(
                 todayYearMonth,
                 style: TextStyle(
@@ -201,25 +205,25 @@ class RegisterViewState extends ConsumerState<RegisterView> {
                   height: 30 / 20,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    dialogVisible = true;
-                  });
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    top: 8.h,
-                    bottom: 8.h,
-                    left: 20.h,
-                    right: 20.h,
-                  ),
-                  child: SvgPicture.asset(Assets.images.mypageIcon),
-                ),
-              )
             ],
           ),
-        ));
+          GestureDetector(
+            onTap: () {
+              // TODO: 마이페이지로 이동
+            },
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: 8.h,
+                bottom: 8.h,
+                left: 20.h,
+                right: 20.h,
+              ),
+              child: SvgPicture.asset(Assets.images.mypageIcon),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   Widget CheckListItem(

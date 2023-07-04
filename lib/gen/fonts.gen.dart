@@ -10,6 +10,9 @@
 class FontFamily {
   FontFamily._();
 
+  /// Font family: GmarketSans
+  static const String gmarketSans = 'GmarketSans';
+
   /// Font family: Pretendard
   static const String pretendard = 'Pretendard';
 }

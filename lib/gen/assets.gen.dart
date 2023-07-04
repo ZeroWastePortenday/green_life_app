@@ -23,9 +23,37 @@ class $AssetsImagesGen {
   /// File path: assets/images/back_button.svg
   String get backButton => 'assets/images/back_button.svg';
 
+  /// File path: assets/images/calendar_icon.png
+  AssetGenImage get calendarIcon =>
+      const AssetGenImage('assets/images/calendar_icon.png');
+
   /// File path: assets/images/google_logo.png
   AssetGenImage get googleLogo =>
       const AssetGenImage('assets/images/google_logo.png');
+
+  /// File path: assets/images/grade_level_1.png
+  AssetGenImage get gradeLevel1 =>
+      const AssetGenImage('assets/images/grade_level_1.png');
+
+  /// File path: assets/images/grade_level_2.png
+  AssetGenImage get gradeLevel2 =>
+      const AssetGenImage('assets/images/grade_level_2.png');
+
+  /// File path: assets/images/grade_level_3.png
+  AssetGenImage get gradeLevel3 =>
+      const AssetGenImage('assets/images/grade_level_3.png');
+
+  /// File path: assets/images/grade_level_4.png
+  AssetGenImage get gradeLevel4 =>
+      const AssetGenImage('assets/images/grade_level_4.png');
+
+  /// File path: assets/images/grade_level_5.png
+  AssetGenImage get gradeLevel5 =>
+      const AssetGenImage('assets/images/grade_level_5.png');
+
+  /// File path: assets/images/home_default_image.png
+  AssetGenImage get homeDefaultImage =>
+      const AssetGenImage('assets/images/home_default_image.png');
 
   /// File path: assets/images/home_text_logo.png
   AssetGenImage get homeTextLogo =>
@@ -62,7 +90,14 @@ class $AssetsImagesGen {
         alertImage,
         appleLogo,
         backButton,
+        calendarIcon,
         googleLogo,
+        gradeLevel1,
+        gradeLevel2,
+        gradeLevel3,
+        gradeLevel4,
+        gradeLevel5,
+        homeDefaultImage,
         homeTextLogo,
         kakaoLogo,
         loginImage,

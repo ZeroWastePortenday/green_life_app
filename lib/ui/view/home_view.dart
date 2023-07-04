@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
+import 'package:green_life_app/gen/fonts.gen.dart';
 import 'package:green_life_app/models/today_state.dart';
 import 'package:green_life_app/routes.dart';
+import 'package:green_life_app/utils/score_utils.dart';
 import 'package:green_life_app/utils/strings.dart';
 
 class HomeView extends StatefulWidget {
@@ -20,8 +22,10 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     const nickname = '지구를 지키자';
-    final todayState = TodayState.first; // 0이면 아예 처음
+    final todayState = TodayState.saved; // 0이면 아예 처음
     final count = 365;
+    final score = 44;
+    final averageScore = 78;
 
     final guideText = switch (todayState) {
       TodayState.first => '$nickname님의\n그린라이프를 시작해보세요!',
@@ -30,12 +34,12 @@ class _HomeViewState extends State<HomeView> {
 
     final todayScore = switch (todayState) {
       TodayState.first || TodayState.notSaved => '클릭!',
-      TodayState.saved => '100점'
+      TodayState.saved => '$score점'
     };
 
-    final averageScore = switch (todayState) {
+    final averageScoreText = switch (todayState) {
       TodayState.first => '0점',
-      TodayState.notSaved || TodayState.saved => '78점'
+      TodayState.notSaved || TodayState.saved => '$averageScore점'
     };
 
     final recordText = switch (todayState) {
@@ -59,12 +63,12 @@ class _HomeViewState extends State<HomeView> {
                   height: isExpanded ? 0.h : 20.h,
                   duration: const Duration(milliseconds: 400),
                 ),
-                HomeImageContainer(),
+                HomeImageContainer(score, nickname),
                 AnimatedContainer(
                   height: isExpanded ? 0.h : 40.h,
                   duration: const Duration(milliseconds: 400),
                 ),
-                ScoreButtons(todayState, todayScore, averageScore),
+                ScoreButtons(todayState, todayScore, averageScoreText),
               ],
             ),
           ),
@@ -104,35 +108,38 @@ class _HomeViewState extends State<HomeView> {
                           Navigator.pushNamed(context, Routes.register);
                         }
                       },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 20.h,
-                            child: Center(
-                              child: Text(
-                                '오늘의 점수',
-                                style: TextStyle(
-                                  color: ColorName.grey94,
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w500,
+                      child: ColoredBox(
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 20.h,
+                              child: Center(
+                                child: Text(
+                                  '오늘의 점수',
+                                  style: TextStyle(
+                                    color: ColorName.grey94,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 7.h),
-                            child: Text(
-                              todayScore,
-                              style: TextStyle(
-                                color: ColorName.primaryColor,
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w700,
-                                decoration: TextDecoration.underline,
+                            Padding(
+                              padding: EdgeInsets.only(top: 7.h),
+                              child: Text(
+                                todayScore,
+                                style: TextStyle(
+                                  color: ColorName.primaryColor,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.w700,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -142,35 +149,43 @@ class _HomeViewState extends State<HomeView> {
                     color: ColorName.greyEA,
                   ),
                   Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 20.h,
-                          child: Center(
-                            child: Text(
-                              '평균점수',
-                              style: TextStyle(
-                                color: ColorName.grey94,
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, Routes.records);
+                      },
+                      child: ColoredBox(
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 20.h,
+                              child: Center(
+                                child: Text(
+                                  '평균점수',
+                                  style: TextStyle(
+                                    color: ColorName.grey94,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 7.h),
-                          child: Text(
-                            averageScore,
-                            style: TextStyle(
-                              color: ColorName.primaryColor,
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.w700,
-                              decoration: TextDecoration.underline,
+                            Padding(
+                              padding: EdgeInsets.only(top: 7.h),
+                              child: Text(
+                                averageScore,
+                                style: TextStyle(
+                                  color: ColorName.primaryColor,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.w700,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   )
                 ],
@@ -187,14 +202,22 @@ class _HomeViewState extends State<HomeView> {
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 400),
           child: isExpanded
-              ? Text(
-                  todayString,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20.sp,
-                    height: 30 / 20,
-                  ),
+              ? Row(
+                  children: [
+                    Text(
+                      todayString,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20.sp,
+                        height: 30 / 20,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8.w,
+                    ),
+                    Assets.images.calendarIcon.image(),
+                  ],
                 )
               : Padding(
                   padding: EdgeInsets.only(top: 5.h),
@@ -274,13 +297,15 @@ class _HomeViewState extends State<HomeView> {
           AnimatedContainer(
             duration: const Duration(milliseconds: 400),
             height: isExpanded ? 60.h : 100.h,
-          )
+          ),
         ],
       ),
     );
   }
 
-  Widget HomeImageContainer() {
+  Widget HomeImageContainer(int score, String nickname) {
+    final grade = calculateGrade(score);
+
     return GestureDetector(
       onTap: () {
         if (isExpanded) {
@@ -300,11 +325,116 @@ class _HomeViewState extends State<HomeView> {
         duration: const Duration(milliseconds: 400),
         child: Column(
           children: [
-            SizedBox(height: 30.h),
+            SizedBox(height: isExpanded ? 50.h : 30.h),
             Assets.images.homeTextLogo.image(),
+            SizedBox(height: 32.h),
+            getGradeImage(grade),
+            Builder(
+              builder: (_) {
+                if (!isExpanded) {
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 400),
+                    height: isExpanded ? 40.h : 0.h,
+                  );
+                } else {
+                  final text = nickname + getGuideText(grade);
+
+                  return FutureBuilder(
+                    future: Future<dynamic>.delayed(
+                      const Duration(milliseconds: 400),
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState != ConnectionState.done) {
+                        return Container();
+                      }
+                      return Column(
+                        children: [
+                          SizedBox(height: 29.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '$score',
+                                style: TextStyle(
+                                  color: ColorName.primaryColor,
+                                  fontSize: 62.sp,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: FontFamily.gmarketSans,
+                                ),
+                              ),
+                              Text(
+                                '점',
+                                style: TextStyle(
+                                  color: ColorName.primaryColor,
+                                  fontSize: 48.sp,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: FontFamily.gmarketSans,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 30.h,
+                          ),
+                          Text(
+                            text,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              height: 26 / 16,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                            height: 50.h,
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Builder getGradeImage(Grade grade) {
+    return Builder(
+            builder: (_) {
+              // return Assets image gradeLevel by grade
+              return switch (grade) {
+                Grade.perfect =>
+                  Assets.images.gradeLevel5.image(
+                    width: 290.w,
+                    height: 231.h,
+                  ),
+                Grade.high =>
+                  Assets.images.gradeLevel4.image(
+                    width: 290.w,
+                    height: 231.h,
+                  ),
+                Grade.medium =>
+                  Assets.images.gradeLevel3.image(
+                    width: 290.w,
+                    height: 231.h,
+                  ),
+                Grade.low =>
+                  Assets.images.gradeLevel2.image(
+                    width: 290.w,
+                    height: 231.h,
+                  ),
+                Grade.veryLow =>
+                  Assets.images.gradeLevel1.image(
+                    width: 290.w,
+                    height: 231.h,
+                  ),
+              };
+            },
+          );
   }
 }

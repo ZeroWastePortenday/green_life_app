@@ -1,5 +1,5 @@
-const perfectScoreGuideText = '님, 지구는\n당신을 너무 좋아해요!';
-const highScoreGuideText = '님, 덕분에\n오늘 지구는 너무 행복해요!';
-const midScoreGuideText = '님, 지구는\n당신을 좋아해요!';
-const lowScoreGuideText = '님, 지구는\n너무 슬퍼요 ㅠㅠ';
-const veryLowScoreGuideText = '님, 지구는\n당신을 싫어해요!';
+const perfectScoreGuideText = '정말 대단해요 👍\n오늘 당신의 실천으로 지구는 행복해요.';
+const highScoreGuideText = '거의 다 왔어요🙌\n이전과 다른 지구가 느껴지시나요?';
+const midScoreGuideText = '노력하는 모습, 너무 멋져요👏\n더 행복한 지구의 모습을 만들어봐요!';
+const lowScoreGuideText = '아직 지구는 많이 덥지만 🥵\n미션 실천으로 조금씩 살아나고 있어요!';
+const veryLowScoreGuideText = '조금씩 미션을 실천해나가면\n살아나는 지구를 만날 수 있어요!';

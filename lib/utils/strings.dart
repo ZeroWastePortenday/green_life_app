@@ -23,7 +23,7 @@ String getYearMonthDay(DateTime selected) {
 }
 
 // get today's year and month
-String getTodayYearMonth({DateTime? dateTime}) {
+String getYearMonth({DateTime? dateTime}) {
   dateTime ??= DateTime.now();
   final year = dateTime.year.toString();
   final month = dateTime.month.toString();

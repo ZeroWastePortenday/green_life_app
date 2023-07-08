@@ -6,9 +6,9 @@ import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/gen/fonts.gen.dart';
 import 'package:green_life_app/models/today_state.dart';
 import 'package:green_life_app/routes.dart';
+import 'package:green_life_app/ui/widgets/dialog/calendar_dialog.dart';
 import 'package:green_life_app/utils/score_utils.dart';
 import 'package:green_life_app/utils/strings.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -91,103 +91,111 @@ class _HomeViewState extends State<HomeView> {
         ),
         child: isExpanded
             ? const SizedBox.shrink()
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            : ScoreButtonBody(todayState, todayScore, averageScore),
+      ),
+    );
+  }
+
+  Widget ScoreButtonBody(
+    TodayState todayState,
+    String todayScore,
+    String averageScore,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              if (todayState == TodayState.saved) {
+                setState(() {
+                  isExpanded = true;
+                });
+              } else {
+                Navigator.pushNamed(context, Routes.register);
+              }
+            },
+            child: ColoredBox(
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        if (todayState == TodayState.saved) {
-                          setState(() {
-                            isExpanded = true;
-                          });
-                        } else {
-                          Navigator.pushNamed(context, Routes.register);
-                        }
-                      },
-                      child: ColoredBox(
-                        color: Colors.white,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 20.h,
-                              child: Center(
-                                child: Text(
-                                  '오늘의 점수',
-                                  style: TextStyle(
-                                    color: ColorName.grey94,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 7.h),
-                              child: Text(
-                                todayScore,
-                                style: TextStyle(
-                                  color: ColorName.primaryColor,
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w700,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            )
-                          ],
+                  SizedBox(
+                    height: 20.h,
+                    child: Center(
+                      child: Text(
+                        '오늘의 점수',
+                        style: TextStyle(
+                          color: ColorName.grey94,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                   ),
-                  Container(
-                    width: 1,
-                    height: isExpanded ? 0.h : 52.h,
-                    color: ColorName.greyEA,
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, Routes.records);
-                      },
-                      child: ColoredBox(
-                        color: Colors.white,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 20.h,
-                              child: Center(
-                                child: Text(
-                                  '평균점수',
-                                  style: TextStyle(
-                                    color: ColorName.grey94,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 7.h),
-                              child: Text(
-                                averageScore,
-                                style: TextStyle(
-                                  color: ColorName.primaryColor,
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w700,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 7.h),
+                    child: Text(
+                      todayScore,
+                      style: TextStyle(
+                        color: ColorName.primaryColor,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w700,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   )
                 ],
               ),
-      ),
+            ),
+          ),
+        ),
+        Container(
+          width: 1,
+          height: isExpanded ? 0.h : 52.h,
+          color: ColorName.greyEA,
+        ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, Routes.records);
+            },
+            child: ColoredBox(
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 20.h,
+                    child: Center(
+                      child: Text(
+                        '평균점수',
+                        style: TextStyle(
+                          color: ColorName.grey94,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 7.h),
+                    child: Text(
+                      averageScore,
+                      style: TextStyle(
+                        color: ColorName.primaryColor,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w700,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -203,70 +211,81 @@ class _HomeViewState extends State<HomeView> {
             padding: EdgeInsets.only(top: 5.h),
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 400),
-              child: isExpanded
-                  ? GestureDetector(
-                      onTap: () {
-                        showDialog<DateTime?>(
-                          context: context,
-                          builder: (context) => CalendarDialog(
-                            context: context,
-                            selectedDate: selectedTime,
-                          ),
-                        ).then((time) {
-                          setState(() {
-                            if (time != null) {
-                              selectedTime = time;
-                            }
-                          });
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Text(
-                            getYearMonthDay(selectedTime),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20.sp,
-                              height: 30 / 20,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 8.w,
-                          ),
-                          Assets.images.calendarIcon.image(),
-                        ],
-                      ),
-                    )
-                  : SizedBox(
-                      height: 60.h,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          guideText,
-                          maxLines: 2,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20.sp,
-                            height: 30 / 20,
-                          ),
-                        ),
-                      ),
-                    ),
+              child:
+                  isExpanded ? DateSelectableTopBar() : NormalTopBar(guideText),
             ),
           ),
-          GestureDetector(
-            onTap: () {},
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 8.h,
-                left: 24.w,
-                bottom: 24.h,
-              ),
-              child: SvgPicture.asset(Assets.images.mypageIcon),
+          MyPageButton()
+        ],
+      ),
+    );
+  }
+
+  GestureDetector MyPageButton() {
+    return GestureDetector(
+      onTap: () {},
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: 8.h,
+          left: 24.w,
+          bottom: 24.h,
+        ),
+        child: SvgPicture.asset(Assets.images.mypageIcon),
+      ),
+    );
+  }
+
+  SizedBox NormalTopBar(String guideText) {
+    return SizedBox(
+      height: 60.h,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          guideText,
+          maxLines: 2,
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: 20.sp,
+            height: 30 / 20,
+          ),
+        ),
+      ),
+    );
+  }
+
+  GestureDetector DateSelectableTopBar() {
+    return GestureDetector(
+      onTap: () {
+        showDialog<DateTime?>(
+          context: context,
+          builder: (context) => CalendarDialog(
+            context: context,
+            selectedDate: selectedTime,
+          ),
+        ).then((time) {
+          setState(() {
+            if (time != null) {
+              selectedTime = time;
+            }
+          });
+        });
+      },
+      child: Row(
+        children: [
+          Text(
+            getYearMonthDay(selectedTime),
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 20.sp,
+              height: 30 / 20,
             ),
-          )
+          ),
+          SizedBox(
+            width: 8.w,
+          ),
+          Assets.images.calendarIcon.image(),
         ],
       ),
     );
@@ -467,39 +486,4 @@ class _HomeViewState extends State<HomeView> {
       },
     );
   }
-}
-
-Widget CalendarDialog({
-  required BuildContext context,
-  required DateTime selectedDate,
-}) {
-  final controller = DateRangePickerController();
-
-  return Dialog(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8.r),
-    ),
-    child: Wrap(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              SizedBox(height: 20.h),
-              SfDateRangePicker(
-                controller: controller,
-                selectionColor: ColorName.primaryColor,
-                todayHighlightColor: ColorName.primaryColor,
-                initialSelectedDate: selectedDate,
-                onSelectionChanged: (value) {
-                  final date = value.value as DateTime;
-                  Navigator.pop(context, date);
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
 }

@@ -49,6 +49,9 @@ class ColorName {
   /// Color: #33C1E2
   static const Color primaryColor = Color(0xFF33C1E2);
 
+  /// Color: #E6FAFF
+  static const Color primaryLightColor = Color(0xFFE6FAFF);
+
   /// Color: #F4FAF6
   static const Color registerBackground = Color(0xFFF4FAF6);
 }

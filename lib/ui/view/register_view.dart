@@ -184,7 +184,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
   }
 
   ColoredBox TopBar() {
-    final todayYearMonth = getTodayYearMonth(dateTime: selectedDateTime);
+    final todayYearMonth = getYearMonth(dateTime: selectedDateTime);
     return ColoredBox(
       color: Colors.white,
       child: Row(

@@ -8,6 +8,7 @@ import 'package:green_life_app/models/today_state.dart';
 import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/utils/score_utils.dart';
 import 'package:green_life_app/utils/strings.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -18,6 +19,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   bool isExpanded = false;
+  var selectedTime = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,6 @@ class _HomeViewState extends State<HomeView> {
       TodayState.saved => '기록 수정하기',
     };
     final buttonText = isExpanded ? '나의 그린라이프 공유하기' : recordText;
-    final todayString = getTodayYearMonthDay();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -58,7 +59,7 @@ class _HomeViewState extends State<HomeView> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                TopBar(todayString, guideText),
+                TopBar(guideText),
                 HomeImageContainer(score, nickname),
                 AnimatedContainer(
                   height: isExpanded ? 0.h : 40.h,
@@ -190,7 +191,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget TopBar(String todayString, String guideText) {
+  Widget TopBar(String guideText) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       height: isExpanded ? 59.h : 85.h,
@@ -203,22 +204,39 @@ class _HomeViewState extends State<HomeView> {
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 400),
               child: isExpanded
-                  ? Row(
-                      children: [
-                        Text(
-                          todayString,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20.sp,
-                            height: 30 / 20,
+                  ? GestureDetector(
+                      onTap: () {
+                        showDialog<DateTime?>(
+                          context: context,
+                          builder: (context) => CalendarDialog(
+                            context: context,
+                            selectedDate: selectedTime,
                           ),
-                        ),
-                        SizedBox(
-                          width: 8.w,
-                        ),
-                        Assets.images.calendarIcon.image(),
-                      ],
+                        ).then((time) {
+                          setState(() {
+                            if (time != null) {
+                              selectedTime = time;
+                            }
+                          });
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            getYearMonthDay(selectedTime),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20.sp,
+                              height: 30 / 20,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8.w,
+                          ),
+                          Assets.images.calendarIcon.image(),
+                        ],
+                      ),
                     )
                   : SizedBox(
                       height: 60.h,
@@ -449,4 +467,39 @@ class _HomeViewState extends State<HomeView> {
       },
     );
   }
+}
+
+Widget CalendarDialog({
+  required BuildContext context,
+  required DateTime selectedDate,
+}) {
+  final controller = DateRangePickerController();
+
+  return Dialog(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8.r),
+    ),
+    child: Wrap(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              SizedBox(height: 20.h),
+              SfDateRangePicker(
+                controller: controller,
+                selectionColor: ColorName.primaryColor,
+                todayHighlightColor: ColorName.primaryColor,
+                initialSelectedDate: selectedDate,
+                onSelectionChanged: (value) {
+                  final date = value.value as DateTime;
+                  Navigator.pop(context, date);
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
 }

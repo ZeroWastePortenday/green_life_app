@@ -15,11 +15,10 @@ bool validateNicknameInput(String? input) {
 }
 
 // get today's year and month and day
-String getTodayYearMonthDay() {
-  final now = DateTime.now();
-  final year = now.year.toString();
-  final month = now.month.toString();
-  final day = now.day.toString();
+String getYearMonthDay(DateTime selected) {
+  final year = selected.year.toString();
+  final month = selected.month.toString();
+  final day = selected.day.toString();
   return '$year년 $month월 $day일';
 }
 

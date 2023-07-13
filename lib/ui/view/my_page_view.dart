@@ -8,6 +8,8 @@ import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/provider/app_version_provider.dart';
 import 'package:green_life_app/provider/login/logout.dart';
 import 'package:green_life_app/routes.dart';
+import 'package:green_life_app/ui/widgets/dialog/logout_dialog.dart';
+import 'package:green_life_app/ui/widgets/dialog/sign_out_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyPageView extends ConsumerWidget {
@@ -35,7 +37,7 @@ class MyPageView extends ConsumerWidget {
               height: 8.h,
               color: ColorName.greyF3,
             ),
-            MyPageBottomButtons(context),
+            MyPageBottomButtons(context, nickname),
           ],
         ),
       ),
@@ -86,7 +88,7 @@ class MyPageView extends ConsumerWidget {
         color: ColorName.greyF2,
       );
 
-  Widget MyPageBottomButtons(BuildContext context) {
+  Widget MyPageBottomButtons(BuildContext context, String nickname) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
@@ -94,22 +96,53 @@ class MyPageView extends ConsumerWidget {
           MyPageButton(
             '로그아웃',
             onTap: () {
-              logout(() {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  Routes.login,
-                  (route) => false,
-                );
-              });
+              showLogoutDialog(context, nickname);
             },
             textColor: ColorName.grey76,
           ),
           InnerDivider(),
-          MyPageButton('계정삭제', onTap: () {}, textColor: ColorName.grey76),
+          MyPageButton('계정삭제', onTap: () {
+            showDialog<bool>(
+              context: context,
+              builder: (context) {
+                return SignOutDialog(context: context, nickname: nickname);
+              },
+            ).then((value) {
+              if (value ?? false) {
+                // TODO sign out
+                logout(() {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    Routes.login,
+                        (route) => false,
+                  );
+                });
+              }
+            });
+          }, textColor: ColorName.grey76),
           InnerDivider(),
         ],
       ),
     );
+  }
+
+  void showLogoutDialog(BuildContext context, String nickname) {
+    showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return LogoutDialog(context: context, nickname: nickname);
+      },
+    ).then((value) {
+      if (value ?? false) {
+        logout(() {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            Routes.login,
+            (route) => false,
+          );
+        });
+      }
+    });
   }
 
   Widget MyPageButton(

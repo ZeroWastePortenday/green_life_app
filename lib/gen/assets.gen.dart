@@ -27,6 +27,9 @@ class $AssetsImagesGen {
   AssetGenImage get calendarIcon =>
       const AssetGenImage('assets/images/calendar_icon.png');
 
+  /// File path: assets/images/close_icon.svg
+  String get closeIcon => 'assets/images/close_icon.svg';
+
   /// File path: assets/images/google_logo.png
   AssetGenImage get googleLogo =>
       const AssetGenImage('assets/images/google_logo.png');
@@ -85,12 +88,17 @@ class $AssetsImagesGen {
   AssetGenImage get splashLogo =>
       const AssetGenImage('assets/images/splash_logo.png');
 
+  /// File path: assets/images/sweat_emoji.png
+  AssetGenImage get sweatEmoji =>
+      const AssetGenImage('assets/images/sweat_emoji.png');
+
   /// List of all assets
   List<dynamic> get values => [
         alertImage,
         appleLogo,
         backButton,
         calendarIcon,
+        closeIcon,
         googleLogo,
         gradeLevel1,
         gradeLevel2,
@@ -105,7 +113,8 @@ class $AssetsImagesGen {
         mypageIcon,
         naverLogo,
         rightArrow,
-        splashLogo
+        splashLogo,
+        sweatEmoji
       ];
 }
 

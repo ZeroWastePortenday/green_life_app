@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/provider/register/register_check_provider.dart';
+import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/utils/date_utils.dart';
 import 'package:green_life_app/utils/logger.dart';
 import 'package:green_life_app/utils/strings.dart';
@@ -209,7 +210,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
           ),
           GestureDetector(
             onTap: () {
-              // TODO: 마이페이지로 이동
+              Navigator.pushNamed(context, Routes.myPage);
             },
             child: Padding(
               padding: EdgeInsets.only(

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:green_life_app/ui/view/record_view.dart';
 import 'package:green_life_app/ui/view/home_view.dart';
 import 'package:green_life_app/ui/view/login_view.dart';
+import 'package:green_life_app/ui/view/my_page_view.dart';
+import 'package:green_life_app/ui/view/record_view.dart';
 import 'package:green_life_app/ui/view/register_view.dart';
 import 'package:green_life_app/ui/view/sign_up_view.dart';
 import 'package:green_life_app/ui/view/splash_view.dart';
@@ -33,6 +34,8 @@ class Pages {
         return router.create(child: const RegisterView());
       case Routes.records:
         return router.create(child: const RecordView());
+      case Routes.myPage:
+        return router.create(child: const MyPageView());
     }
     return null;
   }

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
+import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/utils/strings.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
@@ -77,7 +78,9 @@ class _RecordViewState extends State<RecordView> {
             ),
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, Routes.myPage);
+            },
             child: Padding(
               padding: EdgeInsets.only(
                 top: 8.h,

@@ -229,6 +229,7 @@ class _SignUpViewState extends State<SignUpView> {
                             padding: EdgeInsets.symmetric(vertical: 10.h),
                             child: Divider(
                               thickness: 1.h,
+                              height: 1.h,
                               color: const Color(0xfff2f2f2),
                             ),
                           ),
@@ -291,7 +292,7 @@ class _SignUpViewState extends State<SignUpView> {
                                 GestureDetector(
                                   onTap: () {
                                     launchUrl(
-                                      Uri.parse(TERMS_OF_SERVICE_URL),
+                                      Uri.parse(termsOfServiceUrl),
                                       mode: LaunchMode.externalApplication,
                                     );
                                   },
@@ -342,7 +343,7 @@ class _SignUpViewState extends State<SignUpView> {
                                 GestureDetector(
                                   onTap: () {
                                     launchUrl(
-                                      Uri.parse(PRIVACY_POLICY_URL),
+                                      Uri.parse(privacyPolicyUrl),
                                       mode: LaunchMode.externalApplication,
                                     );
                                   },

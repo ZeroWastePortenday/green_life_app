@@ -23,6 +23,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO API 연동 후 데이터 받아오기
     const nickname = '지구를 지키자';
     final todayState = TodayState.saved; // 0이면 아예 처음
     final count = 365;
@@ -223,7 +224,9 @@ class _HomeViewState extends State<HomeView> {
 
   GestureDetector MyPageButton() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, Routes.myPage);
+      },
       child: Padding(
         padding: EdgeInsets.only(
           top: 8.h,

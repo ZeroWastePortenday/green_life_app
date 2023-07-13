@@ -28,7 +28,7 @@ class _HomeViewState extends State<HomeView> {
     final todayState = TodayState.saved; // 0이면 아예 처음
     final count = 365;
     final score = 44;
-    final averageScore = 78;
+    final inputAverageScore = 78;
 
     final guideText = switch (todayState) {
       TodayState.first => '$nickname님의\n그린라이프를 시작해보세요!',
@@ -40,9 +40,9 @@ class _HomeViewState extends State<HomeView> {
       TodayState.saved => '$score점'
     };
 
-    final averageScoreText = switch (todayState) {
-      TodayState.first => '0점',
-      TodayState.notSaved || TodayState.saved => '$averageScore점'
+    final averageScore = switch (todayState) {
+      TodayState.first => 0,
+      TodayState.notSaved || TodayState.saved => inputAverageScore
     };
 
     final recordText = switch (todayState) {
@@ -66,7 +66,7 @@ class _HomeViewState extends State<HomeView> {
                   height: isExpanded ? 0.h : 40.h,
                   duration: const Duration(milliseconds: 400),
                 ),
-                ScoreButtons(todayState, todayScore, averageScoreText),
+                ScoreButtons(todayState, todayScore, averageScore),
               ],
             ),
           ),
@@ -78,7 +78,7 @@ class _HomeViewState extends State<HomeView> {
   AnimatedOpacity ScoreButtons(
     TodayState todayState,
     String todayScore,
-    String averageScore,
+    int averageScore,
   ) {
     return AnimatedOpacity(
       opacity: isExpanded ? 0 : 1,
@@ -100,7 +100,7 @@ class _HomeViewState extends State<HomeView> {
   Widget ScoreButtonBody(
     TodayState todayState,
     String todayScore,
-    String averageScore,
+    int averageScore,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -182,7 +182,7 @@ class _HomeViewState extends State<HomeView> {
                   Padding(
                     padding: EdgeInsets.only(top: 7.h),
                     child: Text(
-                      averageScore,
+                      '$averageScore점',
                       style: TextStyle(
                         color: ColorName.primaryColor,
                         fontSize: 20.sp,

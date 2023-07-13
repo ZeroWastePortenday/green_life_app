@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_life_app/const/strings.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
+import 'package:green_life_app/ui/widgets/top_bar_divider.dart';
 
 Widget LogoutDialog({
   required BuildContext context,
@@ -67,10 +68,7 @@ Widget LogoutDialog({
                 ),
               ),
               SizedBox(height: 39.h),
-              Divider(
-                height: 1.h,
-                thickness: 1.h,
-                color: ColorName.greyF2,
+              NormalDivider(
                 indent: 20.w,
                 endIndent: 20.w,
               ),

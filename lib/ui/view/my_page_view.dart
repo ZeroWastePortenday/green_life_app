@@ -10,6 +10,7 @@ import 'package:green_life_app/provider/login/logout.dart';
 import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/ui/widgets/dialog/logout_dialog.dart';
 import 'package:green_life_app/ui/widgets/dialog/sign_out_dialog.dart';
+import 'package:green_life_app/ui/widgets/top_bar_divider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyPageView extends ConsumerWidget {
@@ -25,11 +26,7 @@ class MyPageView extends ConsumerWidget {
         child: Column(
           children: [
             TopBar(context),
-            Divider(
-              thickness: 1.h,
-              height: 1.h,
-              color: ColorName.greyF2,
-            ),
+            NormalDivider(),
             WelcomeBox(nickname),
             MyPageTopButtons(ref),
             Divider(
@@ -58,7 +55,7 @@ class MyPageView extends ConsumerWidget {
               );
             },
           ),
-          InnerDivider(),
+          NormalDivider(),
           MyPageButton(
             '개인정보처리방침',
             onTap: () {
@@ -68,7 +65,7 @@ class MyPageView extends ConsumerWidget {
               );
             },
           ),
-          InnerDivider(),
+          NormalDivider(),
           MyPageButton(
             '버전정보',
             subText: ref.watch(appVersionProvider).when(
@@ -82,12 +79,6 @@ class MyPageView extends ConsumerWidget {
     );
   }
 
-  Divider InnerDivider() => Divider(
-        thickness: 1.h,
-        height: 1.h,
-        color: ColorName.greyF2,
-      );
-
   Widget MyPageBottomButtons(BuildContext context, String nickname) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -100,7 +91,7 @@ class MyPageView extends ConsumerWidget {
             },
             textColor: ColorName.grey76,
           ),
-          InnerDivider(),
+          NormalDivider(),
           MyPageButton('계정삭제', onTap: () {
             showDialog<bool>(
               context: context,
@@ -120,7 +111,7 @@ class MyPageView extends ConsumerWidget {
               }
             });
           }, textColor: ColorName.grey76),
-          InnerDivider(),
+          NormalDivider(),
         ],
       ),
     );

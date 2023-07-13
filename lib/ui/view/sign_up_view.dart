@@ -6,6 +6,7 @@ import 'package:green_life_app/const/consts.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/routes.dart';
+import 'package:green_life_app/ui/widgets/top_bar_divider.dart';
 import 'package:green_life_app/utils/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -227,11 +228,7 @@ class _SignUpViewState extends State<SignUpView> {
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 10.h),
-                            child: Divider(
-                              thickness: 1.h,
-                              height: 1.h,
-                              color: const Color(0xfff2f2f2),
-                            ),
+                            child: NormalDivider(),
                           ),
                           GestureDetector(
                             onTap: () => setState(() => first = !first),

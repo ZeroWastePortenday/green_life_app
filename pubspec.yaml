@@ -68,6 +68,7 @@ flutter:
   assets:
     - .env
     - assets/images/
+    - shorebird.yaml
 
   fonts:
     - family: Pretendard

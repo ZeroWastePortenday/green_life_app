@@ -17,7 +17,7 @@ Future<void> main() async {
         builder: (BuildContext context, Widget? child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            initialRoute: Routes.home,
+            initialRoute: Routes.splash,
             onGenerateRoute: Pages.getPages,
             locale: const Locale('ko', 'KR'),
             localizationsDelegates: const [

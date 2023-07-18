@@ -4,6 +4,5 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 final appVersionProvider = FutureProvider<String>((ref) async {
   final packageInfo = await PackageInfo.fromPlatform();
-  print(packageInfo);
   return packageInfo.version;
 });

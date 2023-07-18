@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:green_life_app/models/user.dart' as user;
+import 'package:green_life_app/models/user/user.dart' as user;
+import 'package:green_life_app/provider/api/sign_up.dart';
 import 'package:green_life_app/provider/login/apple_login.dart';
 import 'package:green_life_app/provider/login/google_login.dart';
 import 'package:green_life_app/provider/login/kakao_login.dart';
@@ -13,12 +12,15 @@ import 'package:green_life_app/provider/login/naver_login.dart';
 import 'package:green_life_app/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final loginProvider = StateNotifierProvider<LoginProvider, LoginState>(
-  (ref) => LoginProvider(),
-);
+final loginProvider = StateNotifierProvider<LoginProvider, LoginState>((ref) {
+  final userApi = ref.watch(userApiProvider);
+  return LoginProvider(userApi);
+});
 
 class LoginProvider extends StateNotifier<LoginState> {
-  LoginProvider() : super(LoginInitialState());
+  LoginProvider(this.userApi) : super(LoginInitialState());
+
+  final AsyncValue<UserApi> userApi;
 
   void login(LoginType loginType) {
     state = LoginLoadingState();
@@ -52,11 +54,12 @@ class LoginProvider extends StateNotifier<LoginState> {
   // ignore: avoid_positional_boolean_parameters
   Future<void> sendResult(bool isSuccess) async {
     if (isSuccess) {
-      unawaited(
-        FirebaseAuth.instance.currentUser?.getIdToken().then((token) {
-          Clipboard.setData(ClipboardData(text: token));
-        }),
+      userApi.when(
+        data: (api) => api.login(),
+        loading: () {},
+        error: (e, s) => Log.e(s),
       );
+
       state = LoginLoadedState(const user.User(id: 0, isNew: true));
       Log.i('로그인 성공');
     } else {

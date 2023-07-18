@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:green_life_app/models/user.dart';
+import 'package:green_life_app/models/user/user.dart';
 
 abstract class LoginState extends Equatable {}
 

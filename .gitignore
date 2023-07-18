@@ -46,3 +46,4 @@ app.*.map.json
 lib/firebase_options.dart
 .env
 shorebird.yaml
+lib/const/secret_consts.dart

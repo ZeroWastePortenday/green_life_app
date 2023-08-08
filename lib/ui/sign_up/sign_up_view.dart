@@ -1,29 +1,32 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_life_app/const/consts.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
+import 'package:green_life_app/provider/sign_up/sign_up_provider.dart';
 import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/ui/widgets/top_bar_divider.dart';
 import 'package:green_life_app/utils/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SignUpView extends StatefulWidget {
+class SignUpView extends ConsumerStatefulWidget {
   const SignUpView({super.key});
 
   @override
-  State<SignUpView> createState() => _SignUpViewState();
+  ConsumerState<SignUpView> createState() => _SignUpViewState();
 }
 
-class _SignUpViewState extends State<SignUpView> {
+class _SignUpViewState extends ConsumerState<SignUpView> {
   final focusNode = FocusNode();
   bool isValidate = false;
 
   bool first = false;
   bool second = false;
   bool third = false;
+
+  final textEditingController = TextEditingController();
 
   @override
   void dispose() {
@@ -33,6 +36,14 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: 에러 상황일 때는?
+    ref.listen(signUpProvider, (bool? previous, bool next) {
+      if (next) {
+        Navigator.pushNamed(context, Routes.home);
+      }
+    });
+
+
     return GestureDetector(
       onTap: focusNode.unfocus,
       child: Scaffold(
@@ -88,6 +99,7 @@ class _SignUpViewState extends State<SignUpView> {
                           TextField(
                             autofocus: true,
                             focusNode: focusNode,
+                            controller: textEditingController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(4.r),
@@ -177,17 +189,17 @@ class _SignUpViewState extends State<SignUpView> {
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 200),
                                   decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(4.r),
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    color: first && second && third
+                                        ? ColorName.primaryColor
+                                        : Colors.white,
+                                    border: Border.all(
+                                      width: 1.w,
                                       color: first && second && third
                                           ? ColorName.primaryColor
-                                          : Colors.white,
-                                      border: Border.all(
-                                        width: 1.w,
-                                        color: first && second && third
-                                            ? ColorName.primaryColor
-                                            : ColorName.grey94,
-                                      )),
+                                          : ColorName.grey94,
+                                    ),
+                                  ),
                                   child: Icon(
                                     Icons.check,
                                     color: Colors.white,
@@ -372,7 +384,8 @@ class _SignUpViewState extends State<SignUpView> {
                 child: GestureDetector(
                   onTap: () {
                     if (first && second && third) {
-                      Navigator.pushNamed(context, Routes.home);
+                      final nickname = textEditingController.text;
+                      ref.read(signUpProvider.notifier).signUp(nickname);
                     }
                   },
                   child: Container(

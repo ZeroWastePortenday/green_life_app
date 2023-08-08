@@ -9,6 +9,9 @@ class ApiResult {
   factory ApiResult.fromJson(Map<String, dynamic> json) =>
       _$ApiResultFromJson(json);
 
+  factory ApiResult.fromDynamic(dynamic data) =>
+      ApiResult.fromJson(data as Map<String, dynamic>);
+
   final int? code;
   final bool? success;
   final String? message;

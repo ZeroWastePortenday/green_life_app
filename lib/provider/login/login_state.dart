@@ -13,8 +13,8 @@ class LoginLoadingState extends LoginState {
   List<Object> get props => [];
 }
 
-class LoginLoadedState extends LoginState {
-  LoginLoadedState(this.user);
+class LoginSuccessState extends LoginState {
+  LoginSuccessState(this.user);
 
   final User user;
 
@@ -31,7 +31,12 @@ class LoginErrorState extends LoginState {
   List<Object> get props => [message];
 }
 
-class LoginEmptyState extends LoginState {
+class LoginNeedToSignUpState extends LoginState {
+  @override
+  List<Object> get props => [];
+}
+
+class LoginNeededState extends LoginState {
   @override
   List<Object> get props => [];
 }

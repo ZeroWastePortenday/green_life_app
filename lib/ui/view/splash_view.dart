@@ -1,32 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
+import 'package:green_life_app/provider/login/login_provider.dart';
+import 'package:green_life_app/provider/login/login_state.dart';
 import 'package:green_life_app/routes.dart';
 
-class SplashView extends StatefulWidget {
+class SplashView extends ConsumerStatefulWidget {
   const SplashView({super.key});
 
   @override
-  State<SplashView> createState() => _SplashViewState();
+  ConsumerState<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashViewState extends State<SplashView> {
+class _SplashViewState extends ConsumerState<SplashView> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          Routes.login,
-          (route) => false,
-        );
-      });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      ref.read(loginProvider.notifier).autoLogin();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(loginProvider, (previous, next) {
+      if (next is LoginSuccessState) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Routes.home,
+          (route) => false,
+        );
+      } else if (next is LoginNeededState) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Routes.login,
+              (route) => false,
+        );
+      }
+    });
+
     return Scaffold(
       backgroundColor: ColorName.primaryColor,
       body: Stack(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:green_life_app/ui/view/home_view.dart';
-import 'package:green_life_app/ui/view/login_view.dart';
+import 'package:green_life_app/ui/login/login_view.dart';
 import 'package:green_life_app/ui/view/my_page_view.dart';
 import 'package:green_life_app/ui/view/record_view.dart';
 import 'package:green_life_app/ui/view/register_view.dart';
-import 'package:green_life_app/ui/view/sign_up_view.dart';
+import 'package:green_life_app/ui/sign_up/sign_up_view.dart';
 import 'package:green_life_app/ui/view/splash_view.dart';
 
 class Routes {

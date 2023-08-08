@@ -16,10 +16,17 @@ class LoginView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     ref.listen(loginProvider, (previous, next) {
-      if (next is LoginLoadedState) {
+      if (next is LoginNeedToSignUpState) {
         Navigator.pushNamed(context, Routes.signUp);
+      } else if (next is LoginSuccessState) {
+        Navigator.pushNamed(context, Routes.home);
+      } else if (next is LoginErrorState) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.message),
+          ),
+        );
       }
     });
 

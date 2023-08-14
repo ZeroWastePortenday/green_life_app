@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:green_life_app/gen/fonts.gen.dart';
 import 'package:sign_in_with_apple/src/widgets/apple_logo_painter.dart';
 
 /// The scale based on the height of the button
@@ -104,9 +103,9 @@ class SignInWithAppleButton extends StatelessWidget {
         fontSize: fontSize,
         color: _contrastColor,
         // defaults styles aligned with https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/cupertino/text_theme.dart#L16
-        fontFamily: FontFamily.pretendard,
-        fontWeight: FontWeight.w600,
+        fontFamily: '.SF Pro Text',
         letterSpacing: -0.41,
+        fontWeight: FontWeight.w500,
       ),
     );
 
@@ -161,18 +160,18 @@ class SignInWithAppleButton extends StatelessWidget {
           borderRadius: borderRadius,
           padding: EdgeInsets.zero,
           color: _backgroundColor,
+          onPressed: onPressed,
           child: Container(
             decoration: _decoration,
             padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
+              horizontal: 16,
             ),
             height: height,
             child: Row(
-              children: children,
               mainAxisAlignment: MainAxisAlignment.center,
+              children: children,
             ),
           ),
-          onPressed: onPressed,
         ),
       ),
     );

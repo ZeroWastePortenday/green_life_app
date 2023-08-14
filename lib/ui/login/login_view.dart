@@ -30,97 +30,99 @@ class LoginView extends ConsumerWidget {
       }
     });
 
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 66.h, bottom: 34.h),
-                  child: Assets.images.loginImage.image(),
-                ),
-                SizedBox(
-                  height: 30.h,
-                  child: Center(
-                    child: Text(
-                      '지구를 살리는 선택',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16.sp,
-                      ),
-                    ),
+      body: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Assets.images.loginImage.image(fit: BoxFit.cover, width: width),
+              Column(
+                children: [
+                  loginButton(
+                    backgroundColor: ColorName.kakao,
+                    onTap: () =>
+                        ref.read(loginProvider.notifier).login(LoginType.kakao),
+                    text: '카카오로 로그인',
+                    textColor: Colors.black,
+                    iconImage: Assets.images.kakaoLogo.image(),
                   ),
-                ),
-                SizedBox(height: 8.h),
-                Assets.images.loginLogo.image(),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(bottom: 60.h),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    loginButton(
-                      backgroundColor: ColorName.kakao,
-                      onTap: () =>
-                          ref.read(loginProvider.notifier).login(LoginType.kakao),
-                      text: '카카오로 로그인',
-                      textColor: Colors.black,
-                      iconImage: Assets.images.kakaoLogo.image(),
-                    ),
-                    SizedBox(height: 12.h),
-                    loginButton(
-                      backgroundColor: ColorName.naver,
-                      onTap: () =>
-                          ref.read(loginProvider.notifier).login(LoginType.naver),
-                      text: '네이버로 로그인',
-                      textColor: Colors.white,
-                      iconImage: Assets.images.naverLogo.image(),
-                    ),
-                    SizedBox(height: 12.h),
-                    loginButton(
-                      backgroundColor: Colors.white,
-                      onTap: () =>
-                          ref.read(loginProvider.notifier).login(LoginType.google),
-                      text: 'Google로 로그인',
-                      textColor: Colors.black,
-                      iconImage: Assets.images.googleLogo.image(),
-                      hasBorder: true,
-                    ),
-                    Builder(
-                      builder: (_) {
-                        if (Platform.isIOS) {
-                          return Column(
-                            children: [
-                              SizedBox(height: 12.h),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                                child: SignInWithAppleButton(
-                                  onPressed: () => ref
-                                      .read(loginProvider.notifier)
-                                      .login(LoginType.apple),
-                                  height: 48,
-                                  text: 'Apple로 로그인',
-                                  iconAlignment: IconAlignment.left,
-                                ),
+                  12.verticalSpace,
+                  loginButton(
+                    backgroundColor: ColorName.naver,
+                    onTap: () =>
+                        ref.read(loginProvider.notifier).login(LoginType.naver),
+                    text: '네이버로 로그인',
+                    textColor: Colors.white,
+                    iconImage: Assets.images.naverLogo.image(),
+                  ),
+                  12.verticalSpace,
+                  loginButton(
+                    backgroundColor: Colors.white,
+                    onTap: () => ref
+                        .read(loginProvider.notifier)
+                        .login(LoginType.google),
+                    text: 'Google로 로그인',
+                    textColor: Colors.black,
+                    iconImage: Assets.images.googleLogo.image(),
+                    hasBorder: true,
+                  ),
+                  Builder(
+                    builder: (_) {
+                      if (Platform.isIOS) {
+                        return Column(
+                          children: [
+                            12.verticalSpace,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              child: SignInWithAppleButton(
+                                onPressed: () => ref
+                                    .read(loginProvider.notifier)
+                                    .login(LoginType.apple),
+                                text: 'Apple로 로그인',
+                                iconAlignment: IconAlignment.left,
                               ),
-                            ],
-                          );
-                        } else {
-                          return SizedBox(height: 52.h,);
-                        }
-                      },
-                    ),
-                  ],
+                            ),
+                          ],
+                        );
+                      } else {
+                        return 52.verticalSpace;
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              114.verticalSpace,
+              Text(
+                '지구를 살리는\n당신의 선택, 그린라이프',
+                style: TextStyle(
+                  fontSize: 22.sp,
+                  height: 30 / 22,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              10.verticalSpace,
+              Text(
+                '브랜드 메세지가 들어가는 자리',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  height: 30 / 16,
+                  color: Colors.black,
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -150,7 +152,7 @@ class LoginView extends ConsumerWidget {
       child: Container(
         decoration: loginBoxDecoration(backgroundColor, hasBorder: hasBorder),
         width: 320.w,
-        height: 48,
+        height: 44,
         child: Stack(
           children: [
             Align(

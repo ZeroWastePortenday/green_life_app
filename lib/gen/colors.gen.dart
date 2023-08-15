@@ -57,4 +57,7 @@ class ColorName {
 
   /// Color: #F4FAF6
   static const Color registerBackground = Color(0xFFF4FAF6);
+
+  /// Color: #1A6F6F6F
+  static const Color shadow = Color(0x1A6F6F6F);
 }

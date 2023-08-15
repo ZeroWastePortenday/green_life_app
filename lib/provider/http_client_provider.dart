@@ -5,14 +5,18 @@ import 'package:green_life_app/const/secret_consts.dart';
 
 final dioProvider = FutureProvider<Dio>((ref) async {
   final currentUser = FirebaseAuth.instance.currentUser;
-  if (currentUser == null) return Dio();
-  final token = await currentUser.getIdToken(true);
+  if (currentUser == null) {
+    return Dio(
+      BaseOptions(
+        baseUrl: apiServerBaseUrl,
+      ),
+    );
+  }
+  final token = await currentUser.getIdToken();
   return Dio(
     BaseOptions(
       baseUrl: apiServerBaseUrl,
-      headers: {
-        'Authorization': 'Bearer $token'
-      },
+      headers: {'Authorization': 'Bearer $token'},
     ),
   );
 });

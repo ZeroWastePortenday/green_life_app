@@ -14,6 +14,8 @@
     <color name="grey94">#949494</color>
     <color name="grey76">#767676</color>
 
+    <color name="shadow">#1A6F6F6F</color>
+
     <color name="green">#83DB7D</color>
     <color name="green_background">#EAFFE8</color>
     <color name="register_background">#F4FAF6</color>

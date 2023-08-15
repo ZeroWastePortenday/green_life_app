@@ -7,7 +7,7 @@ import 'package:green_life_app/provider/login/login_state.dart';
 import 'package:green_life_app/utils/logger.dart';
 
 final userApiProvider = FutureProvider<UserApi>((ref) async {
-  final dio = ref.watch(dioProvider).value ?? Dio();
+  final dio = await ref.read(dioProvider.future);
   return UserApi(dio);
 });
 

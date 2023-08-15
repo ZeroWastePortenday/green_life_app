@@ -105,7 +105,7 @@ class MyPageView extends ConsumerWidget {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     Routes.login,
-                        (route) => false,
+                    (route) => false,
                   );
                 });
               }
@@ -156,7 +156,8 @@ class MyPageView extends ConsumerWidget {
                 style: TextStyle(
                   color: textColor ?? Colors.black,
                   fontWeight: FontWeight.w500,
-                  fontSize: 14.sp,
+                  fontSize: 15.sp,
+                  height: 20 / 15,
                 ),
               ),
             ),
@@ -223,15 +224,17 @@ class MyPageView extends ConsumerWidget {
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 18.sp,
+                    height: 26 / 18,
                   ),
                 ),
-                SizedBox(height: 4.h),
+                1.verticalSpace,
                 Text(
                   '그린라이프에 오신 걸 환영해요 :)',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: 16.sp,
+                    height: 26 / 16,
                   ),
                 ),
               ],

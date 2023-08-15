@@ -55,6 +55,8 @@ class RegisterViewState extends ConsumerState<RegisterView> {
       '10. 더미 더미 더미 텍스트가 들어갑니다.',
     ];
 
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -78,13 +80,13 @@ class RegisterViewState extends ConsumerState<RegisterView> {
         ),
       ),
       bottomSheet: ColoredBox(
-        color: ColorName.registerBackground,
+        color: Colors.white,
         child: Padding(
           padding: EdgeInsets.only(
-            bottom: 60.h,
+            bottom: bottomPadding + 20.h,
             left: 20.w,
             right: 20.w,
-            top: 10.h,
+            top: 20.h,
           ),
           child: GestureDetector(
             onTap: () {
@@ -132,11 +134,11 @@ class RegisterViewState extends ConsumerState<RegisterView> {
                   return Column(
                     children: [
                       CheckListItem(questionList, i),
-                      SizedBox(height: 14.h),
+                      14.verticalSpace,
                       if (i == questionList.length - 1)
-                        SizedBox(height: 120.h)
+                        120.verticalSpace
                       else
-                        const SizedBox.shrink(),
+                        0.verticalSpace
                     ],
                   );
                 },

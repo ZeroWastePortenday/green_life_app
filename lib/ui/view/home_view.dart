@@ -30,11 +30,6 @@ class _HomeViewState extends State<HomeView> {
     final score = 44;
     final inputAverageScore = 78;
 
-    final guideText = switch (todayState) {
-      TodayState.first => '$nickname님의\n그린라이프를 시작해보세요!',
-      TodayState.notSaved || TodayState.saved => '$nickname님의\n그린라이프 $count일째',
-    };
-
     final todayScore = switch (todayState) {
       TodayState.first || TodayState.notSaved => '클릭!',
       TodayState.saved => '$score점'
@@ -60,10 +55,14 @@ class _HomeViewState extends State<HomeView> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                TopBar(guideText),
+                TopBar(
+                  nickname: nickname,
+                  todayState: todayState,
+                  count: count,
+                ),
                 HomeImageContainer(score, nickname),
                 AnimatedContainer(
-                  height: isExpanded ? 0.h : 40.h,
+                  height: isExpanded ? 0.h : 20.h,
                   duration: const Duration(milliseconds: 400),
                 ),
                 ScoreButtons(todayState, todayScore, averageScore),
@@ -87,8 +86,34 @@ class _HomeViewState extends State<HomeView> {
         width: double.infinity,
         height: isExpanded ? 0.h : 80.h,
         decoration: BoxDecoration(
-          border: Border.all(color: ColorName.greyEA),
+          color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(4.r)),
+          boxShadow: [
+            BoxShadow(
+              color: ColorName.shadow,
+              blurRadius: 4.r,
+              spreadRadius: -4.r,
+              offset: const Offset(0, 6),
+            ),
+            BoxShadow(
+              color: ColorName.shadow,
+              blurRadius: 4.r,
+              spreadRadius: -4.r,
+              offset: const Offset(6, 0),
+            ),
+            BoxShadow(
+              color: ColorName.shadow,
+              blurRadius: 4.r,
+              spreadRadius: -4.r,
+              offset: const Offset(0, -6),
+            ),
+            BoxShadow(
+              color: ColorName.shadow,
+              blurRadius: 4.r,
+              spreadRadius: -4.r,
+              offset: const Offset(-6, 0),
+            ),
+          ],
         ),
         child: isExpanded
             ? const SizedBox.shrink()
@@ -200,7 +225,11 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget TopBar(String guideText) {
+  Widget TopBar({
+    required String nickname,
+    required TodayState todayState,
+    int? count,
+  }) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       height: isExpanded ? 59.h : 85.h,
@@ -212,8 +241,13 @@ class _HomeViewState extends State<HomeView> {
             padding: EdgeInsets.only(top: 5.h),
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 400),
-              child:
-                  isExpanded ? DateSelectableTopBar() : NormalTopBar(guideText),
+              child: isExpanded
+                  ? DateSelectableTopBar()
+                  : NormalTopBar(
+                      nickname: nickname,
+                      todayState: todayState,
+                      count: count,
+                    ),
             ),
           ),
           MyPageButton()
@@ -238,22 +272,52 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  SizedBox NormalTopBar(String guideText) {
-    return SizedBox(
-      height: 60.h,
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          guideText,
-          maxLines: 2,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 20.sp,
-            height: 30 / 20,
-          ),
+  Widget NormalTopBar({
+    required String nickname,
+    required TodayState todayState,
+    int? count,
+  }) {
+    final guideText = switch (todayState) {
+      TodayState.first => '그린라이프를 시작해보세요!',
+      TodayState.notSaved || TodayState.saved => '그린라이프',
+    };
+
+    final style = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w600,
+      fontSize: 20.sp,
+      height: 30 / 20,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('$nickname님의', style: style,),
+        Row(
+          children: [
+            Text(
+              guideText,
+              maxLines: 2,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+                fontSize: 20.sp,
+                height: 30 / 20,
+              ),
+            ),
+            if (count != null)
+              Text(
+                ' $count일째',
+                style: TextStyle(
+                  color: ColorName.primaryColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20.sp,
+                  height: 30 / 20,
+                ),
+              ),
+          ],
         ),
-      ),
+      ],
     );
   }
 
@@ -295,6 +359,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   GestureDetector BottomButton(BuildContext context, String buttonText) {
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
     return GestureDetector(
       onTap: () {
         if (!isExpanded) {
@@ -334,10 +399,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
           ),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            height: isExpanded ? 60.h : 100.h,
-          ),
+          (bottomPadding + 20).verticalSpace,
         ],
       ),
     );
@@ -356,7 +418,7 @@ class _HomeViewState extends State<HomeView> {
       },
       child: AnimatedContainer(
         width: double.infinity,
-        height: isExpanded ? 557.h : 362.h,
+        height: isExpanded ? 557.h : 382.h,
         decoration: BoxDecoration(
           border: Border.all(color: ColorName.primaryColor),
           borderRadius: BorderRadius.all(Radius.circular(4.r)),

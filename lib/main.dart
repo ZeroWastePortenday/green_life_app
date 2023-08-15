@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,8 @@ import 'package:green_life_app/initial_settings.dart';
 import 'package:green_life_app/routes.dart';
 
 Future<void> main() async {
+  // debugRepaintRainbowEnabled = true;
+
   await initSettings();
   runApp(
     ProviderScope(

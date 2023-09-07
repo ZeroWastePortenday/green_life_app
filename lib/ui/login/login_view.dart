@@ -113,12 +113,13 @@ class LoginView extends ConsumerWidget {
               ),
               10.verticalSpace,
               Text(
-                '브랜드 메세지가 들어가는 자리',
+                '오늘의 지구 미션을 확인하세요',
                 style: TextStyle(
                   fontSize: 16.sp,
                   height: 30 / 16,
                   color: Colors.black,
                 ),
+                textAlign: TextAlign.center,
               ),
             ],
           ),

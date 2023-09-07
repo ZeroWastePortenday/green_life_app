@@ -232,22 +232,45 @@ class _HomeViewState extends State<HomeView> {
   }) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
-      height: isExpanded ? 59.h : 85.h,
+      height: isExpanded ? 59.h : (59 + 60 + 20).h,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.only(top: 5.h),
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 400),
-              child: isExpanded
-                  ? DateSelectableTopBar()
-                  : NormalTopBar(
-                      nickname: nickname,
-                      todayState: todayState,
-                      count: count,
-                    ),
+            child: FutureBuilder(
+              future: Future<dynamic>.delayed(
+                const Duration(milliseconds: 400),
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return Container();
+                }
+
+                return FutureBuilder(
+                  future: Future<dynamic>.delayed(Duration.zero),
+                  builder: (context, s2) {
+                    return AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 400),
+                      child: AnimatedOpacity(
+                              opacity:
+                                  s2.connectionState == ConnectionState.done
+                                      ? 1
+                                      : 0,
+                              duration: const Duration(milliseconds: 400),
+                              child:  isExpanded
+                                  ? DateSelectableTopBar()
+                                  : NormalTopBar(
+                                nickname: nickname,
+                                todayState: todayState,
+                                count: count,
+                              ),
+                            ),
+                    );
+                  },
+                );
+              },
             ),
           ),
           MyPageButton()
@@ -292,7 +315,13 @@ class _HomeViewState extends State<HomeView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('$nickname님의', style: style,),
+        2.verticalSpace,
+        Assets.images.appLogo.image(),
+        25.24.verticalSpace,
+        Text(
+          '$nickname님의',
+          style: style,
+        ),
         Row(
           children: [
             Text(
@@ -433,7 +462,6 @@ class _HomeViewState extends State<HomeView> {
                 milliseconds: 400,
               ),
             ),
-            Assets.images.homeTextLogo.image(),
             AnimatedContainer(
               duration: const Duration(milliseconds: 400),
               height: isExpanded ? 32.h : 42.h,

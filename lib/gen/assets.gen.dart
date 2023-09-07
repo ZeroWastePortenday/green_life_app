@@ -16,6 +16,10 @@ class $AssetsImagesGen {
   AssetGenImage get alertImage =>
       const AssetGenImage('assets/images/alert_image.png');
 
+  /// File path: assets/images/app_logo.png
+  AssetGenImage get appLogo =>
+      const AssetGenImage('assets/images/app_logo.png');
+
   /// File path: assets/images/apple_logo.png
   AssetGenImage get appleLogo =>
       const AssetGenImage('assets/images/apple_logo.png');
@@ -95,6 +99,7 @@ class $AssetsImagesGen {
   /// List of all assets
   List<dynamic> get values => [
         alertImage,
+        appLogo,
         appleLogo,
         backButton,
         calendarIcon,

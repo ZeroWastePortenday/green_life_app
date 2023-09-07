@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
-import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/provider/login/login_provider.dart';
 import 'package:green_life_app/provider/login/login_state.dart';
 import 'package:green_life_app/routes.dart';
@@ -41,7 +40,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
     });
 
     return Scaffold(
-      backgroundColor: ColorName.primaryColor,
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Center(

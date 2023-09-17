@@ -8,48 +8,66 @@ import 'package:green_life_app/utils/logger.dart';
 class Google {
   static Future<bool> login() async {
     try {
-      final googleSignIn = GoogleSignIn(
-        scopes: [
-          'email',
-        ],
-      );
-      final account = await googleSignIn.signIn();
-
-      if (account == null) {
-        throw Exception('not logged in');
-      }
-
-      final authentication = await account.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: authentication.accessToken,
-        idToken: authentication.idToken,
-      );
-
-      // Firebase Sign in
-      final userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      return userCredential.user != null;
+      final account = await getGoogleAccountHasEmailScope();
+      return await getLoginResultIfAccountNotNull(account);
     } catch (error) {
       Log.e(error);
       return false;
     }
   }
 
-  static void logout(BuildContext context, void Function() callback) {
-    GoogleSignIn(
-      scopes: [
-        'email',
-      ],
-    ).signOut().then((value) {
-      firebaseLogout(context, callback);
-    });
+  static Future<GoogleSignInAccount?> getGoogleAccountHasEmailScope() async {
+    final googleSignIn = GoogleSignIn(scopes: ['email']);
+    final account = await googleSignIn.signIn();
+    return account;
   }
+
+  static Future<bool> getLoginResultIfAccountNotNull(
+    GoogleSignInAccount? account,
+  ) async {
+    var loginResult = false;
+    if (account != null) {
+      loginResult = await getLoginResult(account);
+    }
+    return loginResult;
+  }
+
+  static Future<bool> getLoginResult(GoogleSignInAccount account) async {
+    final authentication = await getAuthentication(account);
+    final googleCredential = getGoogleCredential(authentication);
+    final firebaseUserCredential = await getFirebaseUserCredentialByGoogleCredential(googleCredential);
+    return isFirebaseUserNotNull(firebaseUserCredential);
+  }
+
+  static bool isFirebaseUserNotNull(UserCredential firebaseUserCredential) =>
+      firebaseUserCredential.user != null;
+
+  static OAuthCredential getGoogleCredential(
+    GoogleSignInAuthentication authentication,
+  ) =>
+      GoogleAuthProvider.credential(
+        accessToken: authentication.accessToken,
+        idToken: authentication.idToken,
+      );
+
+  static Future<GoogleSignInAuthentication> getAuthentication(
+    GoogleSignInAccount account,
+  ) async =>
+      account.authentication;
+
+  static Future<UserCredential> getFirebaseUserCredentialByGoogleCredential(
+    OAuthCredential credential,
+  ) async =>
+      FirebaseAuth.instance.signInWithCredential(credential);
+
+  static void logout(BuildContext context, void Function() callback) =>
+      GoogleSignIn(scopes: ['email']).signOut().then((value) {
+        firebaseLogout(context, callback);
+      });
 }
 
-
 void firebaseLogout(BuildContext context, void Function() callback) {
-  FirebaseAuth.instance.signOut().then((value) {
+  FirebaseAuth.instance.signOut().then((_) {
     callback();
   });
 }

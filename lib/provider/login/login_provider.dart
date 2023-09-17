@@ -24,9 +24,11 @@ class LoginProvider extends StateNotifier<LoginState> {
 
   void login(LoginType loginType) {
     state = LoginLoadingState();
-
     saveLoginInfo(loginType);
+    loginByLoginType(loginType);
+  }
 
+  void loginByLoginType(LoginType loginType) {
     switch (loginType) {
       case LoginType.google:
         Google.login().then(sendResult);

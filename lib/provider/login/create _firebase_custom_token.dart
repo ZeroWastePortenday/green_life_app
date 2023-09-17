@@ -8,10 +8,15 @@ Future<String> createFirebaseCustomToken({
 
   final result =
       await instance.httpsCallable(loginType).call<dynamic>(accessToken);
-  if (result.data is Map) {
-    final token = result.data['firebase_token'].toString();
-    return token ?? '';
-  }
 
-  return '';
+  return getFirebaseTokenIfResultDataIsMap(result);
+}
+
+String getFirebaseTokenIfResultDataIsMap(HttpsCallableResult<dynamic> result) {
+  var token = '';
+
+  if (result.data is Map) {
+    token = result.data['firebase_token'].toString();
+  }
+  return token;
 }

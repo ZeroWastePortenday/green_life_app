@@ -9,17 +9,33 @@ class Naver {
   static Future<bool> login() async {
     final result = await FlutterNaverLogin.logIn();
 
+    return getLoginResultIfStatusIsLoggedIn(result);
+  }
+
+  static Future<bool> getLoginResultIfStatusIsLoggedIn(
+    NaverLoginResult result,
+  ) async {
     if (result.status == NaverLoginStatus.loggedIn) {
-      final customToken = await createFirebaseCustomToken(
-        accessToken: (await FlutterNaverLogin.currentAccessToken).accessToken,
-        loginType: 'naverCustomAuth',
-      );
-      final userCredential =
-          await FirebaseAuth.instance.signInWithCustomToken(customToken);
-      return userCredential.user != null;
-    } else {
-      return false;
+      final customToken = await getFirebaseCustomToken();
+      final userCredential = await getFirebaseUserCredentialByCustomToken(customToken);
+      return isFirebaseUserNotNull(userCredential);
     }
+    return false;
+  }
+
+  static bool isFirebaseUserNotNull(UserCredential userCredential) => userCredential.user != null;
+
+  static Future<UserCredential> getFirebaseUserCredentialByCustomToken(String customToken) async {
+    final userCredential = await FirebaseAuth.instance.signInWithCustomToken(customToken);
+    return userCredential;
+  }
+
+  static Future<String> getFirebaseCustomToken() async {
+    final customToken = await createFirebaseCustomToken(
+      accessToken: (await FlutterNaverLogin.currentAccessToken).accessToken,
+      loginType: 'naverCustomAuth',
+    );
+    return customToken;
   }
 
   static Future<void> logout() async {

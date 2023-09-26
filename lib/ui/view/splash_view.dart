@@ -19,7 +19,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
       // TODO ref.read(loginProvider.notifier).autoLogin();
       Navigator.pushNamedAndRemoveUntil(
         context,
-        Routes.home,
+        Routes.login,
             (route) => false,
       );
     });

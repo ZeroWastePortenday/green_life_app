@@ -37,11 +37,11 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
   @override
   Widget build(BuildContext context) {
     // TODO: 에러 상황일 때는?
-    ref.listen(signUpProvider, (bool? previous, bool next) {
-      if (next) {
-        Navigator.pushNamed(context, Routes.home);
-      }
-    });
+    // ref.listen(signUpProvider, (bool? previous, bool next) {
+    //   if (next) {
+    //     Navigator.pushNamed(context, Routes.home);
+    //   }
+    // });
 
 
     return GestureDetector(
@@ -384,8 +384,10 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                 child: GestureDetector(
                   onTap: () {
                     if (first && second && third) {
-                      final nickname = textEditingController.text;
-                      ref.read(signUpProvider.notifier).signUp(nickname);
+                      Navigator.pushNamed(context, Routes.home);
+
+                      // final nickname = textEditingController.text;
+                      // ref.read(signUpProvider.notifier).signUp(nickname);
                     }
                   },
                   child: Container(

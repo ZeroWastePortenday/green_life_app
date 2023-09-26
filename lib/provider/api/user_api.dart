@@ -39,15 +39,16 @@ class UserApi {
 
   Future<LoginState> login() async {
     try {
-      final result = await _dio.post<dynamic>(
-        '/login',
-      );
-      if (result.statusCode == 200) {
-        final data = ApiResult.fromDynamic(result.data);
-        Log.i(data.toJson());
-        return LoginSuccessState(user.User.fromDynamic(data.data));
-      }
-      return LoginErrorState('로그인에 실패했습니다.');
+      return LoginNeedToSignUpState();
+      // final result = await _dio.post<dynamic>(
+      //   '/login',
+      // );
+      // if (result.statusCode == 200) {
+      //   final data = ApiResult.fromDynamic(result.data);
+      //   Log.i(data.toJson());
+      //   return LoginSuccessState(user.User.fromDynamic(data.data));
+      // }
+      // return LoginErrorState('로그인에 실패했습니다.');
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
         return LoginNeedToSignUpState();

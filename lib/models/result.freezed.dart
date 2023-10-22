@@ -20,18 +20,24 @@ mixin _$Result<T> {
   TResult when<TResult extends Object?>({
     required TResult Function(T data) success,
     required TResult Function(String message) error,
+    required TResult Function(T? data) loading,
+    required TResult Function() empty,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(T data)? success,
     TResult? Function(String message)? error,
+    TResult? Function(T? data)? loading,
+    TResult? Function()? empty,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(T data)? success,
     TResult Function(String message)? error,
+    TResult Function(T? data)? loading,
+    TResult Function()? empty,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +45,24 @@ mixin _$Result<T> {
   TResult map<TResult extends Object?>({
     required TResult Function(Success<T> value) success,
     required TResult Function(Error<T> value) error,
+    required TResult Function(Loading<T> value) loading,
+    required TResult Function(Empty<T> value) empty,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Success<T> value)? success,
     TResult? Function(Error<T> value)? error,
+    TResult? Function(Loading<T> value)? loading,
+    TResult? Function(Empty<T> value)? empty,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Success<T> value)? success,
     TResult Function(Error<T> value)? error,
+    TResult Function(Loading<T> value)? loading,
+    TResult Function(Empty<T> value)? empty,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -140,6 +152,8 @@ class _$Success<T> implements Success<T> {
   TResult when<TResult extends Object?>({
     required TResult Function(T data) success,
     required TResult Function(String message) error,
+    required TResult Function(T? data) loading,
+    required TResult Function() empty,
   }) {
     return success(data);
   }
@@ -149,6 +163,8 @@ class _$Success<T> implements Success<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(T data)? success,
     TResult? Function(String message)? error,
+    TResult? Function(T? data)? loading,
+    TResult? Function()? empty,
   }) {
     return success?.call(data);
   }
@@ -158,6 +174,8 @@ class _$Success<T> implements Success<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(T data)? success,
     TResult Function(String message)? error,
+    TResult Function(T? data)? loading,
+    TResult Function()? empty,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -171,6 +189,8 @@ class _$Success<T> implements Success<T> {
   TResult map<TResult extends Object?>({
     required TResult Function(Success<T> value) success,
     required TResult Function(Error<T> value) error,
+    required TResult Function(Loading<T> value) loading,
+    required TResult Function(Empty<T> value) empty,
   }) {
     return success(this);
   }
@@ -180,6 +200,8 @@ class _$Success<T> implements Success<T> {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Success<T> value)? success,
     TResult? Function(Error<T> value)? error,
+    TResult? Function(Loading<T> value)? loading,
+    TResult? Function(Empty<T> value)? empty,
   }) {
     return success?.call(this);
   }
@@ -189,6 +211,8 @@ class _$Success<T> implements Success<T> {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Success<T> value)? success,
     TResult Function(Error<T> value)? error,
+    TResult Function(Loading<T> value)? loading,
+    TResult Function(Empty<T> value)? empty,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -271,6 +295,8 @@ class _$Error<T> implements Error<T> {
   TResult when<TResult extends Object?>({
     required TResult Function(T data) success,
     required TResult Function(String message) error,
+    required TResult Function(T? data) loading,
+    required TResult Function() empty,
   }) {
     return error(message);
   }
@@ -280,6 +306,8 @@ class _$Error<T> implements Error<T> {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(T data)? success,
     TResult? Function(String message)? error,
+    TResult? Function(T? data)? loading,
+    TResult? Function()? empty,
   }) {
     return error?.call(message);
   }
@@ -289,6 +317,8 @@ class _$Error<T> implements Error<T> {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(T data)? success,
     TResult Function(String message)? error,
+    TResult Function(T? data)? loading,
+    TResult Function()? empty,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -302,6 +332,8 @@ class _$Error<T> implements Error<T> {
   TResult map<TResult extends Object?>({
     required TResult Function(Success<T> value) success,
     required TResult Function(Error<T> value) error,
+    required TResult Function(Loading<T> value) loading,
+    required TResult Function(Empty<T> value) empty,
   }) {
     return error(this);
   }
@@ -311,6 +343,8 @@ class _$Error<T> implements Error<T> {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Success<T> value)? success,
     TResult? Function(Error<T> value)? error,
+    TResult? Function(Loading<T> value)? loading,
+    TResult? Function(Empty<T> value)? empty,
   }) {
     return error?.call(this);
   }
@@ -320,6 +354,8 @@ class _$Error<T> implements Error<T> {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Success<T> value)? success,
     TResult Function(Error<T> value)? error,
+    TResult Function(Loading<T> value)? loading,
+    TResult Function(Empty<T> value)? empty,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -336,4 +372,262 @@ abstract class Error<T> implements Result<T> {
   @JsonKey(ignore: true)
   _$$ErrorCopyWith<T, _$Error<T>> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LoadingCopyWith<T, $Res> {
+  factory _$$LoadingCopyWith(
+          _$Loading<T> value, $Res Function(_$Loading<T>) then) =
+      __$$LoadingCopyWithImpl<T, $Res>;
+  @useResult
+  $Res call({T? data});
+}
+
+/// @nodoc
+class __$$LoadingCopyWithImpl<T, $Res>
+    extends _$ResultCopyWithImpl<T, $Res, _$Loading<T>>
+    implements _$$LoadingCopyWith<T, $Res> {
+  __$$LoadingCopyWithImpl(
+      _$Loading<T> _value, $Res Function(_$Loading<T>) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? data = freezed,
+  }) {
+    return _then(_$Loading<T>(
+      data: freezed == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as T?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$Loading<T> implements Loading<T> {
+  const _$Loading({this.data});
+
+  @override
+  final T? data;
+
+  @override
+  String toString() {
+    return 'Result<$T>.loading(data: $data)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$Loading<T> &&
+            const DeepCollectionEquality().equals(other.data, data));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadingCopyWith<T, _$Loading<T>> get copyWith =>
+      __$$LoadingCopyWithImpl<T, _$Loading<T>>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(T data) success,
+    required TResult Function(String message) error,
+    required TResult Function(T? data) loading,
+    required TResult Function() empty,
+  }) {
+    return loading(data);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(T data)? success,
+    TResult? Function(String message)? error,
+    TResult? Function(T? data)? loading,
+    TResult? Function()? empty,
+  }) {
+    return loading?.call(data);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(T data)? success,
+    TResult Function(String message)? error,
+    TResult Function(T? data)? loading,
+    TResult Function()? empty,
+    required TResult orElse(),
+  }) {
+    if (loading != null) {
+      return loading(data);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(Success<T> value) success,
+    required TResult Function(Error<T> value) error,
+    required TResult Function(Loading<T> value) loading,
+    required TResult Function(Empty<T> value) empty,
+  }) {
+    return loading(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Success<T> value)? success,
+    TResult? Function(Error<T> value)? error,
+    TResult? Function(Loading<T> value)? loading,
+    TResult? Function(Empty<T> value)? empty,
+  }) {
+    return loading?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(Success<T> value)? success,
+    TResult Function(Error<T> value)? error,
+    TResult Function(Loading<T> value)? loading,
+    TResult Function(Empty<T> value)? empty,
+    required TResult orElse(),
+  }) {
+    if (loading != null) {
+      return loading(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class Loading<T> implements Result<T> {
+  const factory Loading({final T? data}) = _$Loading<T>;
+
+  T? get data;
+  @JsonKey(ignore: true)
+  _$$LoadingCopyWith<T, _$Loading<T>> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$EmptyCopyWith<T, $Res> {
+  factory _$$EmptyCopyWith(_$Empty<T> value, $Res Function(_$Empty<T>) then) =
+      __$$EmptyCopyWithImpl<T, $Res>;
+}
+
+/// @nodoc
+class __$$EmptyCopyWithImpl<T, $Res>
+    extends _$ResultCopyWithImpl<T, $Res, _$Empty<T>>
+    implements _$$EmptyCopyWith<T, $Res> {
+  __$$EmptyCopyWithImpl(_$Empty<T> _value, $Res Function(_$Empty<T>) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$Empty<T> implements Empty<T> {
+  const _$Empty();
+
+  @override
+  String toString() {
+    return 'Result<$T>.empty()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$Empty<T>);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(T data) success,
+    required TResult Function(String message) error,
+    required TResult Function(T? data) loading,
+    required TResult Function() empty,
+  }) {
+    return empty();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(T data)? success,
+    TResult? Function(String message)? error,
+    TResult? Function(T? data)? loading,
+    TResult? Function()? empty,
+  }) {
+    return empty?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(T data)? success,
+    TResult Function(String message)? error,
+    TResult Function(T? data)? loading,
+    TResult Function()? empty,
+    required TResult orElse(),
+  }) {
+    if (empty != null) {
+      return empty();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(Success<T> value) success,
+    required TResult Function(Error<T> value) error,
+    required TResult Function(Loading<T> value) loading,
+    required TResult Function(Empty<T> value) empty,
+  }) {
+    return empty(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Success<T> value)? success,
+    TResult? Function(Error<T> value)? error,
+    TResult? Function(Loading<T> value)? loading,
+    TResult? Function(Empty<T> value)? empty,
+  }) {
+    return empty?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(Success<T> value)? success,
+    TResult Function(Error<T> value)? error,
+    TResult Function(Loading<T> value)? loading,
+    TResult Function(Empty<T> value)? empty,
+    required TResult orElse(),
+  }) {
+    if (empty != null) {
+      return empty(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class Empty<T> implements Result<T> {
+  const factory Empty() = _$Empty<T>;
 }

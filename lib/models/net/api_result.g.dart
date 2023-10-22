@@ -7,15 +7,13 @@ part of 'api_result.dart';
 // **************************************************************************
 
 ApiResult _$ApiResultFromJson(Map<String, dynamic> json) => ApiResult(
-      code: json['code'] as int?,
-      success: json['success'] as bool?,
+      status: json['status'] as int?,
       message: json['message'] as String?,
-      data: json['data'],
+      data: json['data'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$ApiResultToJson(ApiResult instance) => <String, dynamic>{
-      'code': instance.code,
-      'success': instance.success,
+      'status': instance.status,
       'message': instance.message,
       'data': instance.data,
     };

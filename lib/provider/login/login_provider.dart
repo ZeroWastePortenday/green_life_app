@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:green_life_app/models/is_new_user.dart';
 import 'package:green_life_app/provider/api/user_api.dart';
-import 'package:green_life_app/provider/login/apple_login.dart';
-import 'package:green_life_app/provider/login/google_login.dart';
-import 'package:green_life_app/provider/login/kakao_login.dart';
 import 'package:green_life_app/provider/login/login_state.dart';
 import 'package:green_life_app/provider/login/login_type.dart';
-import 'package:green_life_app/provider/login/naver_login.dart';
+import 'package:green_life_app/provider/login/social/apple_login.dart';
+import 'package:green_life_app/provider/login/social/google_login.dart';
+import 'package:green_life_app/provider/login/social/kakao_login.dart';
+import 'package:green_life_app/provider/login/social/naver_login.dart';
 import 'package:green_life_app/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,7 +58,19 @@ class LoginProvider extends StateNotifier<LoginState> {
     if (isSuccess) {
       userApi.when(
         data: (api) async {
-          state = await api.login();
+          final test = await api.checkUser();
+          test.whenOrNull(
+            success: (data) {
+              if (data == IsNewUser.isNew) {
+                state = LoginNeedToSignUpState();
+              } else {
+                api.login().then((value) => state = value);
+              }
+            },
+            error: (message) {
+              Log.e(message);
+            },
+          );
         },
         loading: () {
           state = LoginLoadingState();

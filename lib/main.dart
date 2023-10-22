@@ -17,6 +17,7 @@ Future<void> main() async {
       child: ScreenUtilInit(
         designSize: const Size(360, 800),
         minTextAdapt: true,
+        useInheritedMediaQuery: true,
         builder: (BuildContext context, Widget? child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -35,6 +36,9 @@ Future<void> main() async {
               fontFamily: FontFamily.pretendard,
               brightness: Brightness.light,
               primaryColor: ColorName.primaryColor,
+              bottomSheetTheme: const BottomSheetThemeData(
+                backgroundColor: Colors.transparent,
+              ),
             ),
           );
         },

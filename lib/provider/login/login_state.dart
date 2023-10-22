@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:green_life_app/models/user/user.dart';
+import 'package:green_life_app/models/user/api_user.dart';
 
 abstract class LoginState extends Equatable {}
 
@@ -16,7 +16,7 @@ class LoginLoadingState extends LoginState {
 class LoginSuccessState extends LoginState {
   LoginSuccessState(this.user);
 
-  final User user;
+  final ApiUser user;
 
   @override
   List<Object> get props => [user];

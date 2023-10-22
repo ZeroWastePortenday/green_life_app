@@ -4,7 +4,7 @@ part 'api_result.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ApiResult {
-  ApiResult({this.code, this.success, this.message, this.data});
+  ApiResult({this.status, this.message, this.data});
 
   factory ApiResult.fromJson(Map<String, dynamic> json) =>
       _$ApiResultFromJson(json);
@@ -12,10 +12,9 @@ class ApiResult {
   factory ApiResult.fromDynamic(dynamic data) =>
       ApiResult.fromJson(data as Map<String, dynamic>);
 
-  final int? code;
-  final bool? success;
+  final int? status;
   final String? message;
-  final dynamic data;
+  final Map<String, dynamic>? data;
 
   Map<String, dynamic> toJson() => _$ApiResultToJson(this);
 }

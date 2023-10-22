@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:green_life_app/provider/login/kakao_login.dart';
-import 'package:green_life_app/provider/login/naver_login.dart';
+import 'package:green_life_app/provider/login/social/kakao_login.dart';
+import 'package:green_life_app/provider/login/social/naver_login.dart';
 import 'package:green_life_app/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

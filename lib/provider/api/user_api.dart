@@ -1,11 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:green_life_app/models/is_new_user.dart';
-import 'package:green_life_app/models/net/api_result.dart';
 import 'package:green_life_app/models/result.dart';
 import 'package:green_life_app/models/user/api_user.dart';
 import 'package:green_life_app/provider/http_client_provider.dart';
@@ -23,7 +20,7 @@ class UserApi {
   final Dio _dio;
 
   Future<Result<IsNewUser>> checkUser() async {
-    final result = await _dio.get<dynamic>('/user');
+    final result = await _dio.get<dynamic>('/user', options: await getBaseHeaders());
     Log.i(result);
     if (result.statusCode == 200) {
       final user = ApiUser.fromDynamic(result.data);
@@ -35,26 +32,28 @@ class UserApi {
   Future<Result<bool>> signUp(String nickname) async {
     final result = await _dio.post<dynamic>(
       '/signup',
-      data: {
+      data: FormData.fromMap({
         'nickname': nickname,
-      },
+      }),
+      options: await getBaseHeaders(),
     );
 
-    if (result.statusCode == 200) {
+    if (result.statusCode == 201) {
+      Log.i(result.data);
       return const Result.success(true);
     } else if (result.statusCode == 400) {
       return const Result.success(false); // 중복된 닉네임
     }
-    return const Result.error('회원가입에 실패했습니다.');
+    return Result.error('회원가입에 실패했습니다: ${result.data}');
   }
 
   Future<LoginState> login() async {
     final result = await _dio.post<dynamic>(
       '/login',
+      options: await getBaseHeaders(),
     );
     if (result.statusCode == 200) {
-      final data = ApiResult.fromDynamic(result.data);
-      return LoginSuccessState(ApiUser.fromDynamic(data.data));
+      return LoginSuccessState(ApiUser.fromDynamic(result.data));
     }
     return LoginErrorState('${result.statusCode} 로그인에 실패했습니다.');
   }

@@ -8,6 +8,7 @@ import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/provider/sign_up/sign_up_provider.dart';
 import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/ui/widgets/top_bar_divider.dart';
+import 'package:green_life_app/utils/logger.dart';
 import 'package:green_life_app/utils/strings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -42,8 +43,11 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
           if (data) {
             Navigator.pushNamed(context, Routes.home);
           } else {
-            // TODO : 닉네임 중복
+            Log.e('중복된 닉네임');
           }
+        },
+        error: (message) {
+          Log.e(message);
         },
       );
     });
@@ -100,7 +104,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                     ),
                     SizedBox(height: 12.h),
                     TextField(
-                      autofocus: false,
+                      autofocus: true,
                       focusNode: focusNode,
                       controller: textEditingController,
                       decoration: InputDecoration(
@@ -387,14 +391,13 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
           child: GestureDetector(
             onTap: () {
               if (first && second && third) {
-                Navigator.pushNamed(context, Routes.home);
-
                 final nickname = textEditingController.text;
                 ref.read(signUpProvider.notifier).signUp(nickname);
               }
             },
             child: Padding(
-              padding: EdgeInsets.only(left: 20.h, right: 20.h, bottom: bottom + 20.h),
+              padding: EdgeInsets.only(
+                  left: 20.h, right: 20.h, bottom: bottom + 20.h),
               child: Container(
                 width: double.infinity,
                 height: 60,

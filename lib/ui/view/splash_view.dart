@@ -16,12 +16,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 2), () {
-      // TODO ref.read(loginProvider.notifier).autoLogin();
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        Routes.login,
-            (route) => false,
-      );
+      ref.read(loginProvider.notifier).autoLogin();
     });
     super.initState();
   }
@@ -35,7 +30,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
           Routes.home,
           (route) => false,
         );
-      } else if (next is LoginNeededState) {
+      } else if (next is LoginNeededState || next is LoginNeedToSignUpState) {
         Navigator.pushNamedAndRemoveUntil(
           context,
           Routes.login,

@@ -57,4 +57,12 @@ class UserApi {
     }
     return LoginErrorState('${result.statusCode} 로그인에 실패했습니다.');
   }
+
+  Future<bool> deleteUser() async {
+    final result = await _dio.delete<dynamic>(
+      '/user',
+      options: await getBaseHeaders(),
+    );
+    return result.statusCode == 200;
+  }
 }

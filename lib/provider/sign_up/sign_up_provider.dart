@@ -2,10 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:green_life_app/models/result.dart';
 import 'package:green_life_app/provider/api/user_api.dart';
 
-final signUpProvider = StateNotifierProvider<SignUpProvider, Result<bool>>((ref) {
-  final userApi = ref.watch(userApiProvider);
-  return SignUpProvider(userApi);
-});
+final signUpProvider = StateNotifierProvider<SignUpProvider, Result<bool>>(
+  (ref) {
+    final userApi = ref.watch(userApiProvider);
+    return SignUpProvider(userApi);
+  },
+);
 
 class SignUpProvider extends StateNotifier<Result<bool>> {
   SignUpProvider(this.userApi) : super(const Result.empty());

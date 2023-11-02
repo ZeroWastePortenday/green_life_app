@@ -5,7 +5,7 @@ import 'package:green_life_app/provider/login/social/naver_login.dart';
 import 'package:green_life_app/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void logout(void Function() callback) {
+void socialLogout(void Function() callback) {
   SharedPreferences.getInstance().then((prefs) {
     final loginType = prefs.getString('loginType') ?? '';
     switch (loginType) {

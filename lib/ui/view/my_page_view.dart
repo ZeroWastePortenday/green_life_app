@@ -6,6 +6,7 @@ import 'package:green_life_app/const/consts.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/provider/app_version_provider.dart';
+import 'package:green_life_app/provider/delete_user/delete_user_provider.dart';
 import 'package:green_life_app/provider/login/logout.dart';
 import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/ui/widgets/dialog/logout_dialog.dart';
@@ -34,7 +35,7 @@ class MyPageView extends ConsumerWidget {
               height: 8.h,
               color: ColorName.greyF3,
             ),
-            MyPageBottomButtons(context, nickname),
+            MyPageBottomButtons(context, ref, nickname),
           ],
         ),
       ),
@@ -79,7 +80,8 @@ class MyPageView extends ConsumerWidget {
     );
   }
 
-  Widget MyPageBottomButtons(BuildContext context, String nickname) {
+  Widget MyPageBottomButtons(
+      BuildContext context, WidgetRef ref, String nickname) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
@@ -93,28 +95,48 @@ class MyPageView extends ConsumerWidget {
           ),
           NormalDivider(),
           MyPageButton('계정삭제', onTap: () {
-            showDialog<bool>(
-              context: context,
-              builder: (context) {
-                return SignOutDialog(context: context, nickname: nickname);
-              },
-            ).then((value) {
-              if (value ?? false) {
-                // TODO sign out
-                logout(() {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    Routes.login,
-                    (route) => false,
-                  );
-                });
-              }
-            });
+            showDeleteUserDialog(context, nickname, ref);
           }, textColor: ColorName.grey76),
           NormalDivider(),
         ],
       ),
     );
+  }
+
+  void showDeleteUserDialog(
+      BuildContext context, String nickname, WidgetRef ref) {
+    showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return SignOutDialog(context: context, nickname: nickname);
+      },
+    ).then((value) {
+      deleteUser(delete: value ?? false, ref: ref, context: context);
+    });
+  }
+
+  void deleteUser({
+    required bool delete,
+    required WidgetRef ref,
+    required BuildContext context,
+  }) {
+    if (delete) {
+      ref.read(deleteUserProvider).whenOrNull(
+        data: (isSuccess) {
+          if (isSuccess) _logout(context);
+        },
+      );
+    }
+  }
+
+  void _logout(BuildContext context) {
+    socialLogout(() {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.login,
+        (route) => false,
+      );
+    });
   }
 
   void showLogoutDialog(BuildContext context, String nickname) {
@@ -125,13 +147,7 @@ class MyPageView extends ConsumerWidget {
       },
     ).then((value) {
       if (value ?? false) {
-        logout(() {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            Routes.login,
-            (route) => false,
-          );
-        });
+        _logout(context);
       }
     });
   }

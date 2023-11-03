@@ -20,7 +20,7 @@ class UserApi {
   final Dio _dio;
 
   Future<Result<IsNewUser>> checkUser() async {
-    final result = await _dio.get<dynamic>('/user', options: await getBaseHeaders());
+    final result = await _dio.get<dynamic>('/v1/user', options: await getBaseHeaders());
     Log.i(result);
     if (result.statusCode == 200) {
       final user = ApiUser.fromDynamic(result.data);
@@ -31,7 +31,7 @@ class UserApi {
 
   Future<Result<bool>> signUp(String nickname) async {
     final result = await _dio.post<dynamic>(
-      '/signup',
+      '/v1/signup',
       data: FormData.fromMap({
         'nickname': nickname,
       }),
@@ -49,7 +49,7 @@ class UserApi {
 
   Future<LoginState> login() async {
     final result = await _dio.post<dynamic>(
-      '/login',
+      '/v1/login',
       options: await getBaseHeaders(),
     );
     if (result.statusCode == 200) {
@@ -58,11 +58,14 @@ class UserApi {
     return LoginErrorState('${result.statusCode} 로그인에 실패했습니다.');
   }
 
-  Future<bool> deleteUser() async {
+  Future<Result<bool>> deleteUser() async {
     final result = await _dio.delete<dynamic>(
-      '/user',
+      '/v1/user',
       options: await getBaseHeaders(),
     );
-    return result.statusCode == 200;
+    if (result.statusCode == 200) {
+      return const Result.success(true);
+    }
+    return Result.error('회원탈퇴에 실패했습니다: ${result.data}');
   }
 }

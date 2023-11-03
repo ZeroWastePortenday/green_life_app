@@ -21,6 +21,16 @@ class MyPageView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     const nickname = '지구를지키자';
 
+    ref.listen(deleteUserProvider, (previous, next) {
+      next.whenOrNull(
+        success: (data) {
+          if (data) {
+            _logout(context);
+          }
+        },
+      );
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -121,11 +131,7 @@ class MyPageView extends ConsumerWidget {
     required BuildContext context,
   }) {
     if (delete) {
-      ref.read(deleteUserProvider).whenOrNull(
-        data: (isSuccess) {
-          if (isSuccess) _logout(context);
-        },
-      );
+      ref.read(deleteUserProvider.notifier).deleteUser();
     }
   }
 

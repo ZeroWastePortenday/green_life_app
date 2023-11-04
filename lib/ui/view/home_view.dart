@@ -1,83 +1,109 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/gen/fonts.gen.dart';
-import 'package:green_life_app/models/today_state.dart';
+import 'package:green_life_app/models/result.dart';
+import 'package:green_life_app/models/score/today_score.dart';
+import 'package:green_life_app/provider/global_data.dart';
+import 'package:green_life_app/provider/mission/get_today_mission_provider.dart';
 import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/ui/widgets/dialog/calendar_dialog.dart';
 import 'package:green_life_app/utils/score_utils.dart';
 import 'package:green_life_app/utils/strings.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  ConsumerState<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeViewState extends ConsumerState<HomeView> {
   bool isExpanded = false;
-  var selectedTime = DateTime.now();
+  DateTime selectedTime = DateTime.now();
+
+  @override
+  void initState() {
+    ref.read(getTodayMissionProvider.notifier).getTodayMission();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO API 연동 후 데이터 받아오기
-    const nickname = '지구를 지키자';
-    final todayState = TodayState.saved; // 0이면 아예 처음
-    final count = 365;
-    final score = 44;
-    final inputAverageScore = 78;
+    final apiResult = ref.watch(getTodayMissionProvider);
 
-    final todayScore = switch (todayState) {
-      TodayState.first || TodayState.notSaved => '클릭!',
-      TodayState.saved => '$score점'
-    };
+    if (apiResult is Success) {
+      final today = (apiResult as Success<TodayScore>).data;
 
-    final averageScore = switch (todayState) {
-      TodayState.first => 0,
-      TodayState.notSaved || TodayState.saved => inputAverageScore
-    };
+      final nickname = GlobalData.nickname;
+      final score = today.totalScoreByDay;
+      final todayScoreText = today.getScoreText();
+      final count = today.recordDayCount;
+      final averageScore = today.averageScore.toInt();
+      final todayState = today.hasRecord();
+      final recordText = todayState ? '기록 수정하기' : '그린라이프 기록하기';
+      final buttonText = isExpanded ? '나의 그린라이프 공유하기' : recordText;
 
-    final recordText = switch (todayState) {
-      TodayState.first || TodayState.notSaved => '그린라이프 기록하기',
-      TodayState.saved => '기록 수정하기',
-    };
-    final buttonText = isExpanded ? '나의 그린라이프 공유하기' : recordText;
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      bottomSheet: BottomButton(context, buttonText),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                TopBar(
-                  nickname: nickname,
-                  todayState: todayState,
-                  count: count,
-                ),
-                HomeImageContainer(score, nickname),
-                AnimatedContainer(
-                  height: isExpanded ? 0.h : 20.h,
-                  duration: const Duration(milliseconds: 400),
-                ),
-                ScoreButtons(todayState, todayScore, averageScore),
-              ],
+      return Scaffold(
+        backgroundColor: Colors.white,
+        bottomSheet: BottomButton(context, buttonText),
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TopBar(
+                    nickname: nickname,
+                    todayState: todayState,
+                    count: count,
+                  ),
+                  HomeImageContainer(score, nickname),
+                  AnimatedContainer(
+                    height: isExpanded ? 0.h : 20.h,
+                    duration: const Duration(milliseconds: 400),
+                  ),
+                  ScoreButtons(todayScoreText, averageScore, () {
+                    onClickToTodayScore(
+                      todayState: todayState,
+                      context: context,
+                    );
+                  }),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+  }
+
+  void onClickToTodayScore({
+    required bool todayState,
+    required BuildContext context,
+  }) {
+    if (todayState) {
+      setState(() {
+        isExpanded = true;
+      });
+    } else {
+      Navigator.pushNamed(context, Routes.register);
+    }
   }
 
   AnimatedOpacity ScoreButtons(
-    TodayState todayState,
     String todayScore,
     int averageScore,
+    void Function() onTapTodayScore,
   ) {
     return AnimatedOpacity(
       opacity: isExpanded ? 0 : 1,
@@ -117,30 +143,22 @@ class _HomeViewState extends State<HomeView> {
         ),
         child: isExpanded
             ? const SizedBox.shrink()
-            : ScoreButtonBody(todayState, todayScore, averageScore),
+            : ScoreButtonBody(todayScore, averageScore, onTapTodayScore),
       ),
     );
   }
 
   Widget ScoreButtonBody(
-    TodayState todayState,
     String todayScore,
     int averageScore,
+    void Function() onTapTodayScore,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
           child: GestureDetector(
-            onTap: () {
-              if (todayState == TodayState.saved) {
-                setState(() {
-                  isExpanded = true;
-                });
-              } else {
-                Navigator.pushNamed(context, Routes.register);
-              }
-            },
+            onTap: onTapTodayScore,
             child: ColoredBox(
               color: Colors.white,
               child: Column(
@@ -170,7 +188,7 @@ class _HomeViewState extends State<HomeView> {
                         decoration: TextDecoration.underline,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -220,14 +238,14 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
 
   Widget TopBar({
     required String nickname,
-    required TodayState todayState,
+    required bool todayState,
     int? count,
   }) {
     return AnimatedContainer(
@@ -254,26 +272,23 @@ class _HomeViewState extends State<HomeView> {
                     return AnimatedSwitcher(
                       duration: const Duration(milliseconds: 400),
                       child: AnimatedOpacity(
-                              opacity:
-                                  s2.connectionState == ConnectionState.done
-                                      ? 1
-                                      : 0,
-                              duration: const Duration(milliseconds: 400),
-                              child:  isExpanded
-                                  ? DateSelectableTopBar()
-                                  : NormalTopBar(
+                        opacity:
+                            s2.connectionState == ConnectionState.done ? 1 : 0,
+                        duration: const Duration(milliseconds: 400),
+                        child: isExpanded
+                            ? DateSelectableTopBar()
+                            : NormalTopBar(
                                 nickname: nickname,
-                                todayState: todayState,
                                 count: count,
                               ),
-                            ),
+                      ),
                     );
                   },
                 );
               },
             ),
           ),
-          MyPageButton()
+          MyPageButton(),
         ],
       ),
     );
@@ -297,13 +312,10 @@ class _HomeViewState extends State<HomeView> {
 
   Widget NormalTopBar({
     required String nickname,
-    required TodayState todayState,
     int? count,
   }) {
-    final guideText = switch (todayState) {
-      TodayState.first => '그린라이프를 시작해보세요!',
-      TodayState.notSaved || TodayState.saved => '그린라이프',
-    };
+    final todayState = count != null && count != 0;
+    final guideText = todayState ? '그린라이프' : '그린라이프를 시작해보세요!';
 
     final style = TextStyle(
       color: Colors.black,
@@ -334,7 +346,7 @@ class _HomeViewState extends State<HomeView> {
                 height: 30 / 20,
               ),
             ),
-            if (count != null)
+            if (todayState)
               Text(
                 ' $count일째',
                 style: TextStyle(

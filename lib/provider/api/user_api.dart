@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:green_life_app/models/is_new_user.dart';
 import 'package:green_life_app/models/result.dart';
 import 'package:green_life_app/models/user/api_user.dart';
+import 'package:green_life_app/provider/global_data.dart';
 import 'package:green_life_app/provider/http_client_provider.dart';
 import 'package:green_life_app/provider/login/login_state.dart';
 import 'package:green_life_app/utils/logger.dart';
@@ -53,7 +54,9 @@ class UserApi {
       options: await getBaseHeaders(),
     );
     if (result.statusCode == 200) {
-      return LoginSuccessState(ApiUser.fromDynamic(result.data));
+      final apiUser = ApiUser.fromDynamic(result.data);
+      GlobalData.nickname = apiUser.nickname ?? '';
+      return LoginSuccessState(apiUser);
     }
     return LoginErrorState('${result.statusCode} 로그인에 실패했습니다.');
   }

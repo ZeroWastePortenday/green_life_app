@@ -14,7 +14,7 @@ class SignUpProvider extends StateNotifier<Result<bool>> {
 
   final AsyncValue<UserApi> userApi;
 
-  Future<void> signUp(String nickname) async {
+  void signUp(String nickname) {
     userApi.when(
       data: (api) => api.signUp(nickname).then((value) => state = value),
       error: (e, s) => state = Result.error(e.toString()),

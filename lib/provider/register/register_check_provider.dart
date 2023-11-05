@@ -20,10 +20,10 @@ class RegisterCheckProvider extends StateNotifier<List<Mission?>> {
     state = List.generate(length, (index) => null);
   }
 
-  void check(int index, Mission mission) {
+  void check({required int index, required bool hasTrue}) {
     state = [
       ...state.sublist(0, index),
-      mission,
+      state[index]?.copyWith(answer: hasTrue ? 'Y' : 'N'),
       ...state.sublist(index + 1),
     ];
   }
@@ -48,4 +48,6 @@ class RegisterCheckProvider extends StateNotifier<List<Mission?>> {
       },
     );
   }
+
+  bool get hasAllAnswer => state.every((element) => element?.answer != null);
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:green_life_app/models/mission/mission.dart';
@@ -55,5 +57,28 @@ class MissionApi {
       return Result.success(body);
     }
     return Result.error('code: ${result.statusCode}, 미션 목록을 가져오는데 실패했습니다.');
+  }
+
+  Future<Result<bool>> registerMissions({
+    required String date,
+    required List<Mission?> missionList,
+  }) async {
+    final result = await _dio.post(
+      '/v2/mission',
+      queryParameters: {
+        'date': date,
+      },
+      options: await getBaseHeaders(),
+      data: jsonEncode({
+        'date': date,
+        'answers': Mission.makeMissionListToMap(missionList),
+      }),
+    );
+
+    if (result.statusCode == 201) {
+      return const Result.success(true);
+    }
+
+    return Result.error('code: ${result.statusCode}, 미션 등록에 실패했습니다.');
   }
 }

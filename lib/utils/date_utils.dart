@@ -20,3 +20,10 @@ bool isPastDate(DateTime selectedTime) {
   Log.i('from: $selectedTime, to: $dateTime');
   return selectedTime.isBefore(dateTime);
 }
+
+// DateTime extension
+extension DateTimeExtension on DateTime {
+  String get toDateString => '$year'
+      '${month.toString().padLeft(2, '0')}'
+      '${day.toString().padLeft(2, '0')}';
+}

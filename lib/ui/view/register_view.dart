@@ -6,13 +6,13 @@ import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/models/mission/mission.dart';
 import 'package:green_life_app/provider/register/register_check_provider.dart';
+import 'package:green_life_app/provider/register/register_missions_provider.dart';
 import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/utils/date_utils.dart';
-import 'package:green_life_app/utils/logger.dart';
 import 'package:green_life_app/utils/strings.dart';
 
 class RegisterView extends ConsumerStatefulWidget {
-  const RegisterView({super.key, required this.selectedDateTime});
+  const RegisterView({required this.selectedDateTime, super.key});
 
   final DateTime selectedDateTime;
 
@@ -52,6 +52,22 @@ class RegisterViewState extends ConsumerState<RegisterView> {
     final missionList = ref.watch(registerCheckProvider);
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
+    ref.listen(registerMissionsProvider, (previous, next) {
+      next.whenOrNull(
+        success: (result) {
+          if (result) {
+            Navigator.pop(context, true);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('미션 등록에 실패했습니다.'),
+              ),
+            );
+          }
+        }
+      );
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -85,14 +101,13 @@ class RegisterViewState extends ConsumerState<RegisterView> {
           ),
           child: GestureDetector(
             onTap: () {
-              final checkList = ref.read(registerCheckProvider);
-              Log.i(checkList);
+              registerMissionIfHasAllAnswered(missionList);
             },
             child: Container(
               width: double.infinity,
               height: 60.h,
               decoration: BoxDecoration(
-                color: ColorName.green,
+                color: hasAllAnswer() ? ColorName.green : ColorName.greyF3,
                 borderRadius: BorderRadius.all(
                   Radius.circular(8.r),
                 ),
@@ -102,7 +117,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
                   '저장',
                   style: TextStyle(
                     fontSize: 18.sp,
-                    color: Colors.white,
+                    color: hasAllAnswer() ? Colors.white : ColorName.grey94,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -113,6 +128,17 @@ class RegisterViewState extends ConsumerState<RegisterView> {
       ),
     );
   }
+
+  void registerMissionIfHasAllAnswered(List<Mission?> missionList) {
+    if (hasAllAnswer()) {
+      ref.read(registerMissionsProvider.notifier).register(
+            dateTime: selectedDateTime,
+            missionList: missionList,
+          );
+    }
+  }
+
+  bool hasAllAnswer() => ref.read(registerCheckProvider.notifier).hasAllAnswer;
 
   Expanded ListBody(List<Mission?> missionList) {
     return Expanded(
@@ -133,7 +159,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
                       if (i == missionList.length - 1)
                         120.verticalSpace
                       else
-                        0.verticalSpace
+                        0.verticalSpace,
                     ],
                   );
                 },
@@ -218,7 +244,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
               ),
               child: SvgPicture.asset(Assets.images.mypageIcon),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -265,7 +291,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
                 NoButton(index, mission),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -274,7 +300,10 @@ class RegisterViewState extends ConsumerState<RegisterView> {
   GestureDetector NoButton(int index, Mission mission) {
     return GestureDetector(
       onTap: () {
-        // ref.read(registerCheckProvider.notifier).check(index, false);
+        ref.read(registerCheckProvider.notifier).check(
+              index: index,
+              hasTrue: false,
+            );
       },
       child: Container(
         width: 133.w,
@@ -305,7 +334,10 @@ class RegisterViewState extends ConsumerState<RegisterView> {
   GestureDetector YesButton(int index, Mission mission) {
     return GestureDetector(
       onTap: () {
-        // ref.read(registerCheckProvider.notifier).check(index, true);
+        ref.read(registerCheckProvider.notifier).check(
+              index: index,
+              hasTrue: true,
+            );
       },
       child: Container(
         width: 133.w,

@@ -28,6 +28,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   void initState() {
     super.initState();
+    getTodayMissionAfter100ms();
+  }
+
+  void getTodayMissionAfter100ms() {
     Future.delayed(const Duration(milliseconds: 100), () {
       ref.read(getTodayMissionProvider.notifier).getTodayMission();
     });
@@ -98,8 +102,17 @@ class _HomeViewState extends ConsumerState<HomeView> {
         isExpanded = true;
       });
     } else {
-      Navigator.pushNamed(context, Routes.register, arguments: selectedTime);
+      moveToRegister(context);
     }
+  }
+
+  void moveToRegister(BuildContext context) {
+    Navigator.pushNamed(context, Routes.register, arguments: selectedTime)
+        .then((value) {
+      if (value == true) {
+        getTodayMissionAfter100ms();
+      }
+    });
   }
 
   AnimatedOpacity ScoreButtons(
@@ -406,7 +419,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return GestureDetector(
       onTap: () {
         if (!isExpanded) {
-          Navigator.pushNamed(context, Routes.register, arguments: selectedTime);
+          moveToRegister(context);
         }
       },
       child: Column(

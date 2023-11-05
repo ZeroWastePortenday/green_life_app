@@ -3,7 +3,8 @@ import 'package:green_life_app/models/result.dart';
 import 'package:green_life_app/models/score/today_score.dart';
 import 'package:green_life_app/provider/api/mission_api.dart';
 
-final getTodayMissionProvider = StateNotifierProvider<GetTodayMissionProvider, Result<TodayScore>>((ref) {
+final getTodayMissionProvider =
+    StateNotifierProvider<GetTodayMissionProvider, Result<TodayScore>>((ref) {
   final missionApi = ref.watch(missionApiProvider);
   return GetTodayMissionProvider(missionApi);
 });

@@ -31,7 +31,11 @@ class Pages {
       case Routes.home:
         return router.create(child: const HomeView());
       case Routes.register:
-        return router.create(child: const RegisterView());
+        return router.create(
+          child: RegisterView(
+            selectedDateTime: arguments! as DateTime,
+          ),
+        );
       case Routes.records:
         return router.create(child: const RecordView());
       case Routes.myPage:

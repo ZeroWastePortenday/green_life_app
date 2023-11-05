@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
+import 'package:green_life_app/models/mission/mission.dart';
 import 'package:green_life_app/provider/register/register_check_provider.dart';
 import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/utils/date_utils.dart';
@@ -11,7 +12,9 @@ import 'package:green_life_app/utils/logger.dart';
 import 'package:green_life_app/utils/strings.dart';
 
 class RegisterView extends ConsumerStatefulWidget {
-  const RegisterView({super.key});
+  const RegisterView({super.key, required this.selectedDateTime});
+
+  final DateTime selectedDateTime;
 
   @override
   RegisterViewState createState() => RegisterViewState();
@@ -19,19 +22,24 @@ class RegisterView extends ConsumerStatefulWidget {
 
 class RegisterViewState extends ConsumerState<RegisterView> {
   final todayDateTime = DateTime.now();
-  DateTime selectedDateTime = DateTime.now();
+  late DateTime selectedDateTime;
 
   int selectedIndex = 0;
   bool dialogVisible = false;
 
   @override
   void initState() {
+    selectedDateTime = widget.selectedDateTime;
+
     // thisWeekList에서 오늘 날짜 인덱스 찾기
     selectedIndex = getThisWeekDateList().indexWhere(
       (element) => element.day == todayDateTime.day,
     );
-    ref.read(registerCheckProvider);
     super.initState();
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+      ref.read(registerCheckProvider.notifier).load(selectedDateTime);
+    });
   }
 
   @override
@@ -41,20 +49,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
 
     // thisWeekList를 이용해 요일별 날짜를 표시하는 위젯 목록을 생성
     final widgetList = getThisWeekWidgetList(dayOfWeekList, thisWeekList);
-
-    final questionList = [
-      '1. 더미 더미 더미 텍스트가 들어갑니다.',
-      '2. 더미 더미 더미 텍스트가 들어갑니다.',
-      '3. 더미 더미 더미 텍스트가 들어갑니다.',
-      '4. 더미 더미 더미 텍스트가 들어갑니다.',
-      '5. 더미 더미 더미 텍스트가 들어갑니다.',
-      '6. 더미 더미 더미 텍스트가 들어갑니다.',
-      '7. 더미 더미 더미 텍스트가 들어갑니다.',
-      '8. 더미 더미 더미 텍스트가 들어갑니다.',
-      '9. 더미 더미 더미 텍스트가 들어갑니다.',
-      '10. 더미 더미 더미 텍스트가 들어갑니다.',
-    ];
-
+    final missionList = ref.watch(registerCheckProvider);
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
@@ -75,7 +70,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
               ),
             ),
             const Divider(thickness: 1, height: 1, color: ColorName.greyF2),
-            ListBody(questionList),
+            ListBody(missionList),
           ],
         ),
       ),
@@ -119,7 +114,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
     );
   }
 
-  Expanded ListBody(List<String> questionList) {
+  Expanded ListBody(List<Mission?> missionList) {
     return Expanded(
       child: Stack(
         alignment: Alignment.topCenter,
@@ -129,13 +124,13 @@ class RegisterViewState extends ConsumerState<RegisterView> {
             child: Padding(
               padding: EdgeInsets.only(top: 24.h, left: 20.w, right: 20.w),
               child: ListView.builder(
-                itemCount: questionList.length,
+                itemCount: missionList.length,
                 itemBuilder: (ctx, i) {
                   return Column(
                     children: [
-                      CheckListItem(questionList, i),
+                      CheckListItem(missionList, i),
                       14.verticalSpace,
-                      if (i == questionList.length - 1)
+                      if (i == missionList.length - 1)
                         120.verticalSpace
                       else
                         0.verticalSpace
@@ -230,10 +225,10 @@ class RegisterViewState extends ConsumerState<RegisterView> {
   }
 
   Widget CheckListItem(
-    List<String> questionList,
+    List<Mission?> missionList,
     int index,
   ) {
-    final selected = ref.watch(registerCheckProvider)[index] ?? false;
+    final mission = missionList[index] ?? Mission.empty();
     return Container(
       width: double.infinity,
       height: 110.h,
@@ -250,7 +245,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
           Padding(
             padding: EdgeInsets.only(left: 20.w),
             child: Text(
-              questionList[index],
+              mission.content,
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
@@ -266,8 +261,8 @@ class RegisterViewState extends ConsumerState<RegisterView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                YesButton(index, selected),
-                NoButton(index, selected),
+                YesButton(index, mission),
+                NoButton(index, mission),
               ],
             ),
           )
@@ -276,22 +271,22 @@ class RegisterViewState extends ConsumerState<RegisterView> {
     );
   }
 
-  GestureDetector NoButton(int index, bool selected) {
+  GestureDetector NoButton(int index, Mission mission) {
     return GestureDetector(
       onTap: () {
-        ref.read(registerCheckProvider.notifier).check(index, false);
+        // ref.read(registerCheckProvider.notifier).check(index, false);
       },
       child: Container(
         width: 133.w,
         height: 40.h,
         decoration: BoxDecoration(
           border: Border.all(
-            color: !selected ? ColorName.green : ColorName.greyEA,
+            color: mission.hasFalse ? ColorName.green : ColorName.greyEA,
           ),
           borderRadius: BorderRadius.all(
             Radius.circular(4.r),
           ),
-          color: !selected ? ColorName.greenBackground : Colors.white,
+          color: mission.hasFalse ? ColorName.greenBackground : Colors.white,
         ),
         child: Center(
           child: Text(
@@ -299,7 +294,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
-              color: !selected ? ColorName.green : ColorName.grey94,
+              color: mission.hasFalse ? ColorName.green : ColorName.grey94,
             ),
           ),
         ),
@@ -307,22 +302,22 @@ class RegisterViewState extends ConsumerState<RegisterView> {
     );
   }
 
-  GestureDetector YesButton(int index, bool selected) {
+  GestureDetector YesButton(int index, Mission mission) {
     return GestureDetector(
       onTap: () {
-        ref.read(registerCheckProvider.notifier).check(index, true);
+        // ref.read(registerCheckProvider.notifier).check(index, true);
       },
       child: Container(
         width: 133.w,
         height: 40.h,
         decoration: BoxDecoration(
           border: Border.all(
-            color: selected ? ColorName.green : ColorName.greyEA,
+            color: mission.hasTrue ? ColorName.green : ColorName.greyEA,
           ),
           borderRadius: BorderRadius.all(
             Radius.circular(4.r),
           ),
-          color: selected ? ColorName.greenBackground : Colors.white,
+          color: mission.hasTrue ? ColorName.greenBackground : Colors.white,
         ),
         child: Center(
           child: Text(
@@ -330,7 +325,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
-              color: selected ? ColorName.green : ColorName.grey94,
+              color: mission.hasTrue ? ColorName.green : ColorName.grey94,
             ),
           ),
         ),

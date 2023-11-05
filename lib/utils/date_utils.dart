@@ -17,6 +17,6 @@ List<DateTime> getThisWeekDateList({DateTime? selectedTime}) {
 bool isPastDate(DateTime selectedTime) {
   final today = DateTime.now().add(const Duration(days: 1));
   final dateTime = DateTime(today.year, today.month, today.day);
-  Log.i('checkTime: $selectedTime, dateTime: $dateTime');
+  Log.i('from: $selectedTime, to: $dateTime');
   return selectedTime.isBefore(dateTime);
 }

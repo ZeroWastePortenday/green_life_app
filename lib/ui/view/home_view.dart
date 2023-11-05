@@ -27,8 +27,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   void initState() {
-    ref.read(getTodayMissionProvider.notifier).getTodayMission();
     super.initState();
+    Future.delayed(const Duration(milliseconds: 100), () {
+      ref.read(getTodayMissionProvider.notifier).getTodayMission();
+    });
   }
 
   @override
@@ -96,7 +98,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         isExpanded = true;
       });
     } else {
-      Navigator.pushNamed(context, Routes.register);
+      Navigator.pushNamed(context, Routes.register, arguments: selectedTime);
     }
   }
 
@@ -404,7 +406,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return GestureDetector(
       onTap: () {
         if (!isExpanded) {
-          Navigator.pushNamed(context, Routes.register);
+          Navigator.pushNamed(context, Routes.register, arguments: selectedTime);
         }
       },
       child: Column(

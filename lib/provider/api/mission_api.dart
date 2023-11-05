@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:green_life_app/models/mission/mission.dart';
+import 'package:green_life_app/models/net/api_result_list.dart';
 import 'package:green_life_app/models/result.dart';
 import 'package:green_life_app/models/score/today_score.dart';
 import 'package:green_life_app/provider/http_client_provider.dart';
+import 'package:green_life_app/utils/logger.dart';
 
 final missionApiProvider = FutureProvider<MissionApi>((ref) async {
   final dio = await ref.read(dioProvider.future);
@@ -35,5 +38,22 @@ class MissionApi {
       return Result.success(TodayScore.fromDynamic(result.data));
     }
     return Result.error('code: ${result.statusCode}, 오늘의 기록을 가져오는데 실패했습니다.');
+  }
+
+  Future<Result<List<Mission>>> getMissionList(String date) async {
+    final result = await _dio.get(
+      '/v2/mission',
+      queryParameters: {
+        'date': date,
+      },
+      options: await getBaseHeaders(),
+    );
+    if (result.statusCode == 200) {
+      Log.i(result.data);
+      final apiResultList = ApiResultList.fromDynamic(result.data);
+      final body = (apiResultList.data!).map(Mission.fromDynamic).toList();
+      return Result.success(body);
+    }
+    return Result.error('code: ${result.statusCode}, 미션 목록을 가져오는데 실패했습니다.');
   }
 }

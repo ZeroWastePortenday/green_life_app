@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:green_life_app/models/mission/post_mission.dart';
 
 part 'mission.g.dart';
 
@@ -60,12 +59,7 @@ class Mission {
     final map = <String, dynamic>{};
 
     for (var i = 0; i < missionList.length; i++) {
-      final mission = PostMission(
-        '${missionList[i]?.mission_id}',
-        missionList[i]?.answer,
-      );
-
-      map['${i + 1}'] = mission.toJson();
+      map['${i + 1}'] = missionList[i]?.toJson();
     }
 
     return map;

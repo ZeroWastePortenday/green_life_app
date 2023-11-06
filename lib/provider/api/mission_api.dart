@@ -19,9 +19,8 @@ class MissionApi {
 
   final Dio _dio;
 
-  Future<Result<TodayScore>> getTodayRecord() async {
-    // get Today year(yyyy), month(MM), day(dd)
-    final now = DateTime.now();
+  Future<Result<TodayScore>> getRecord(DateTime dateTime) async {
+    final now = dateTime;
     final year = now.year.toString();
     final month = now.month.toString().padLeft(2, '0');
     final day = now.day.toString().padLeft(2, '0');

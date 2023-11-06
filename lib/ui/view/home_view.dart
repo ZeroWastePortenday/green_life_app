@@ -33,7 +33,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   void getTodayMissionAfter100ms() {
     Future.delayed(const Duration(milliseconds: 100), () {
-      ref.read(getTodayMissionProvider.notifier).getTodayMission();
+      loadTodayMission();
     });
   }
 
@@ -44,18 +44,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
     if (apiResult is Success) {
       final today = (apiResult as Success<TodayScore>).data;
 
-      final nickname = GlobalData.nickname;
-      final score = today.totalScoreByDay;
-      final todayScoreText = today.getScoreText();
-      final count = today.recordDayCount;
-      final averageScore = today.averageScore.toInt();
-      final todayState = today.hasRecord();
-      final recordText = todayState ? '기록 수정하기' : '그린라이프 기록하기';
-      final buttonText = isExpanded ? '나의 그린라이프 공유하기' : recordText;
-
       return Scaffold(
         backgroundColor: Colors.white,
-        bottomSheet: BottomButton(context, buttonText),
+        bottomSheet: BottomButton(context, getButtonText(today.getRecordText)),
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -63,18 +54,22 @@ class _HomeViewState extends ConsumerState<HomeView> {
               child: Column(
                 children: [
                   TopBar(
-                    nickname: nickname,
-                    todayState: todayState,
-                    count: count,
+                    nickname: GlobalData.nickname,
+                    todayState: today.hasRecord,
+                    count: today.recordDayCount,
                   ),
-                  HomeImageContainer(score, nickname),
+                  HomeImageContainer(
+                    today.totalScoreByDay,
+                    GlobalData.nickname,
+                  ),
                   AnimatedContainer(
                     height: isExpanded ? 0.h : 20.h,
                     duration: const Duration(milliseconds: 400),
                   ),
-                  ScoreButtons(todayScoreText, averageScore, () {
+                  ScoreButtons(today.getScoreText, today.averageScore.toInt(),
+                      () {
                     onClickToTodayScore(
-                      todayState: todayState,
+                      todayState: today.hasRecord,
                       context: context,
                     );
                   }),
@@ -92,6 +87,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
       );
     }
   }
+
+  String getButtonText(String recordText) =>
+      isExpanded ? '나의 그린라이프 공유하기' : recordText;
 
   void onClickToTodayScore({
     required bool todayState,
@@ -379,21 +377,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   GestureDetector DateSelectableTopBar() {
     return GestureDetector(
-      onTap: () {
-        showDialog<DateTime?>(
-          context: context,
-          builder: (context) => CalendarDialog(
-            context: context,
-            selectedDate: selectedTime,
-          ),
-        ).then((time) {
-          setState(() {
-            if (time != null) {
-              selectedTime = time;
-            }
-          });
-        });
-      },
+      onTap: showDateSelectDialog,
       child: Row(
         children: [
           Text(
@@ -412,6 +396,24 @@ class _HomeViewState extends ConsumerState<HomeView> {
         ],
       ),
     );
+  }
+
+  void showDateSelectDialog() {
+    showDialog<DateTime?>(
+      context: context,
+      builder: (context) => CalendarDialog(
+        context: context,
+        selectedDate: selectedTime,
+      ),
+    ).then((time) {
+      setState(() {
+        if (time != null) {
+          selectedTime = time;
+          ref.read(getTodayMissionProvider.notifier).getSelectedDateMission(
+                selectedTime);
+        }
+      });
+    });
   }
 
   GestureDetector BottomButton(BuildContext context, String buttonText) {
@@ -468,6 +470,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
       onTap: () {
         if (isExpanded) {
           setState(() {
+            selectedTime = DateTime.now();
+            loadTodayMission();
             isExpanded = false;
           });
         }
@@ -575,6 +579,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
         ),
       ),
     );
+  }
+
+  void loadTodayMission() {
+    ref.read(getTodayMissionProvider.notifier).getTodayMission();
   }
 
   Builder getGradeImage(Grade grade) {

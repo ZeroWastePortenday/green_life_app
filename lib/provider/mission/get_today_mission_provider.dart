@@ -16,7 +16,15 @@ class GetTodayMissionProvider extends StateNotifier<Result<TodayScore>> {
 
   void getTodayMission() {
     missionApi.when(
-      data: (api) => api.getTodayRecord().then((value) => state = value),
+      data: (api) => api.getRecord(DateTime.now()).then((value) => state = value),
+      error: (e, s) => state = Result.error(e.toString()),
+      loading: () => state = const Result.loading(),
+    );
+  }
+
+  void getSelectedDateMission(DateTime selectedDateTime) {
+    missionApi.when(
+      data: (api) => api.getRecord(selectedDateTime).then((value) => state = value),
       error: (e, s) => state = Result.error(e.toString()),
       loading: () => state = const Result.loading(),
     );

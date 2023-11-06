@@ -25,11 +25,9 @@ class TodayScore {
   final int recordDayCount;
   final String missionStatus;
 
-  bool hasRecord() {
-    return missionStatus == 'Y';
-  }
+  bool get hasRecord => missionStatus == 'Y';
 
-  String getScoreText() {
-    return missionStatus == 'Y' ? '$totalScoreByDay점' : '클릭';
-  }
+  String get getScoreText => missionStatus == 'Y' ? '$totalScoreByDay점' : '클릭';
+
+  String get getRecordText => missionStatus == 'Y' ? '기록 수정하기' : '그린라이프 기록하기';
 }

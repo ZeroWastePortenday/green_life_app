@@ -26,6 +26,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
 
   int selectedIndex = 0;
   bool dialogVisible = false;
+  bool hasResetButton = false;
 
   @override
   void initState() {
@@ -38,7 +39,14 @@ class RegisterViewState extends ConsumerState<RegisterView> {
     super.initState();
 
     Future.delayed(const Duration(milliseconds: 100), () {
-      ref.read(registerCheckProvider.notifier).load(selectedDateTime);
+      ref.read(registerCheckProvider.notifier).load(
+        selectedDateTime,
+        hasAnswered: () {
+          setState(() {
+            hasResetButton = true;
+          });
+        },
+      );
     });
   }
 
@@ -53,19 +61,17 @@ class RegisterViewState extends ConsumerState<RegisterView> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     ref.listen(registerMissionsProvider, (previous, next) {
-      next.whenOrNull(
-        success: (result) {
-          if (result) {
-            Navigator.pop(context, true);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('미션 등록에 실패했습니다.'),
-              ),
-            );
-          }
+      next.whenOrNull(success: (result) {
+        if (result) {
+          Navigator.pop(context, true);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('미션 등록에 실패했습니다.'),
+            ),
+          );
         }
-      );
+      });
     });
 
     return Scaffold(
@@ -99,34 +105,79 @@ class RegisterViewState extends ConsumerState<RegisterView> {
             right: 20.w,
             top: 20.h,
           ),
-          child: GestureDetector(
-            onTap: () {
-              registerMissionIfHasAllAnswered(missionList);
-            },
+          child: BottomButtons(missionList),
+        ),
+      ),
+    );
+  }
+
+  Widget BottomButtons(List<Mission?> missionList) {
+    if (hasResetButton) {
+      return Row(
+        children: [
+          GestureDetector(
+            onTap: reset,
             child: Container(
-              width: double.infinity,
+              width: 100.w,
               height: 60.h,
               decoration: BoxDecoration(
-                color: hasAllAnswer() ? ColorName.green : ColorName.greyF3,
                 borderRadius: BorderRadius.all(
                   Radius.circular(8.r),
                 ),
+                color: ColorName.greyF3,
               ),
               child: Center(
                 child: Text(
-                  '저장',
+                  '리셋',
                   style: TextStyle(
                     fontSize: 18.sp,
-                    color: hasAllAnswer() ? Colors.white : ColorName.grey94,
-                    fontWeight: FontWeight.bold,
+                    height: 20/18,
+                    fontWeight: FontWeight.w600,
+                    color: ColorName.grey94,
                   ),
                 ),
               ),
             ),
           ),
+          10.horizontalSpace,
+          SaveButton(missionList, 210.w),
+        ],
+      );
+    }
+
+    return SaveButton(missionList, double.infinity);
+  }
+
+  void reset() {
+    ref.read(registerMissionsProvider.notifier).reset(selectedDateTime);
+  }
+
+  GestureDetector SaveButton(List<Mission?> missionList, double width) {
+    return GestureDetector(
+    onTap: () {
+      registerMissionIfHasAllAnswered(missionList);
+    },
+    child: Container(
+      width: width,
+      height: 60.h,
+      decoration: BoxDecoration(
+        color: hasAllAnswer() ? ColorName.green : ColorName.greyF3,
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.r),
         ),
       ),
-    );
+      child: Center(
+        child: Text(
+          '기록 저장',
+          style: TextStyle(
+            fontSize: 18.sp,
+            color: hasAllAnswer() ? Colors.white : ColorName.grey94,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ),
+  );
   }
 
   void registerMissionIfHasAllAnswered(List<Mission?> missionList) {
@@ -374,16 +425,7 @@ class RegisterViewState extends ConsumerState<RegisterView> {
       widgetList.add(
         GestureDetector(
           onTap: () {
-            setState(() {
-              if (isPastDate(thisWeekList[i])) {
-                selectedDateTime = thisWeekList[i];
-                selectedIndex = i;
-                dialogVisible = false;
-                ref.read(registerCheckProvider.notifier).load(selectedDateTime);
-              } else {
-                dialogVisible = true;
-              }
-            });
+            onTapWeekDate(thisWeekList, i);
           },
           child: Column(
             children: [
@@ -426,5 +468,18 @@ class RegisterViewState extends ConsumerState<RegisterView> {
       );
     }
     return widgetList;
+  }
+
+  void onTapWeekDate(List<DateTime> thisWeekList, int i) {
+    setState(() {
+      if (isPastDate(thisWeekList[i])) {
+        selectedDateTime = thisWeekList[i];
+        selectedIndex = i;
+        dialogVisible = false;
+        ref.read(registerCheckProvider.notifier).load(selectedDateTime);
+      } else {
+        dialogVisible = true;
+      }
+    });
   }
 }

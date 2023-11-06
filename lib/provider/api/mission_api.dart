@@ -81,4 +81,20 @@ class MissionApi {
 
     return Result.error('code: ${result.statusCode}, 미션 등록에 실패했습니다.');
   }
+
+  Future<Result<bool>> resetMissions({required String date}) async {
+    final result = await _dio.delete(
+      '/v2/mission',
+      queryParameters: {
+        'date': date,
+      },
+      options: await getBaseHeaders(),
+    );
+
+    if (result.statusCode == 201) {
+      return const Result.success(true);
+    }
+
+    return Result.error('code: ${result.statusCode}, 미션 초기화에 실패했습니다.');
+  }
 }

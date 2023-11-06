@@ -28,7 +28,7 @@ class RegisterCheckProvider extends StateNotifier<List<Mission?>> {
     ];
   }
 
-  void load(DateTime selectedDateTime) {
+  void load(DateTime selectedDateTime, {void Function()? hasAnswered}) {
     missionApi.whenOrNull(
       data: (api) {
         final date =
@@ -39,6 +39,7 @@ class RegisterCheckProvider extends StateNotifier<List<Mission?>> {
           result.whenOrNull(
             success: (data) {
               state = List.generate(data.length, (i) => data[i]);
+              if (hasAllAnswer) hasAnswered?.call();
             },
             error: (e) {
               state = List.generate(10, (index) => null);

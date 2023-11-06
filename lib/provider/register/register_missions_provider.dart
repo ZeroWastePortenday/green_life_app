@@ -37,4 +37,23 @@ class RegisterMissionsProvider extends StateNotifier<Result<bool>> {
       },
     );
   }
+
+  void reset(DateTime dateTime) {
+    missionApi.whenOrNull(
+      data: (api) async {
+        final result = await api.resetMissions(
+          date: dateTime.toDateString,
+        );
+
+        result.whenOrNull(
+          success: (data) {
+            state = Result.success(data);
+          },
+          error: (e) {
+            state = Result.error(e);
+          },
+        );
+      },
+    );
+  }
 }

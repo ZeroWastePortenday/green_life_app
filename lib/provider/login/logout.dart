@@ -18,11 +18,9 @@ void socialLogout(void Function() callback) {
           firebaseLogout(callback);
         });
       case 'naver':
-        firebaseLogout(Naver.logout);
-        // Naver.logout().then((value) => firebaseLogout(callback));
+        Naver.logout().then((value) => firebaseLogout(callback));
       case 'kakao':
-        firebaseLogout(Kakao.logout);
-        // Kakao.logout().then((value) => firebaseLogout(callback));
+        Kakao.logout().then((value) => firebaseLogout(callback));
       default:
         firebaseLogout(callback);
     }

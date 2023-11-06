@@ -7,6 +7,7 @@ import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/provider/sign_up/sign_up_provider.dart';
 import 'package:green_life_app/routes.dart';
+import 'package:green_life_app/ui/sign_up/nickname_state.dart';
 import 'package:green_life_app/ui/widgets/top_bar_divider.dart';
 import 'package:green_life_app/utils/logger.dart';
 import 'package:green_life_app/utils/strings.dart';
@@ -22,6 +23,7 @@ class SignUpView extends ConsumerStatefulWidget {
 class _SignUpViewState extends ConsumerState<SignUpView> {
   final focusNode = FocusNode();
   bool isValidate = false;
+  bool isDuplicated = false;
 
   bool first = false;
   bool second = false;
@@ -43,7 +45,9 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
           if (data) {
             Navigator.pushNamed(context, Routes.home);
           } else {
-            Log.e('중복된 닉네임');
+            setState(() {
+              isDuplicated = true;
+            });
           }
         },
         error: (message) {
@@ -142,9 +146,10 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                     SizedBox(height: 8.h),
                     Builder(
                       builder: (context) {
-                        final color = isValidate
-                            ? ColorName.primaryColor
-                            : ColorName.grey94;
+                        final nicknameState = getNicknameState();
+                        final color = getTextColor(nicknameState);
+                        final text = getNicknameGuideText(nicknameState);
+
                         return Row(
                           children: [
                             SizedBox(
@@ -152,7 +157,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  '8자 이내 한글 혹은 영문',
+                                  text,
                                   style: TextStyle(
                                     fontSize: 12.sp,
                                     color: color,
@@ -425,5 +430,35 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
         ),
       ),
     );
+  }
+
+  Color getTextColor(NicknameState nicknameState) {
+    if (nicknameState == NicknameState.duplicated) {
+      return ColorName.red;
+    } else if (nicknameState == NicknameState.valid) {
+      return ColorName.primaryColor;
+    } else {
+      return ColorName.grey94;
+    }
+  }
+
+  NicknameState getNicknameState() {
+    NicknameState state;
+    if (isDuplicated) {
+      state = NicknameState.duplicated;
+    } else {
+      state = isValidate ? NicknameState.valid : NicknameState.initial;
+    }
+    return state;
+  }
+
+  String getNicknameGuideText(NicknameState nicknameState) {
+    if (nicknameState == NicknameState.duplicated) {
+      return '이미 등록된 닉네임입니다. 다른 닉네임을 입력해 주세요.';
+    } else if (nicknameState == NicknameState.valid) {
+      return '사용 가능한 닉네임입니다.';
+    } else {
+      return '8자 이내 한글 혹은 영문';
+    }
   }
 }

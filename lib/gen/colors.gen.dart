@@ -55,6 +55,9 @@ class ColorName {
   /// Color: #E6FAFF
   static const Color primaryLightColor = Color(0xFFE6FAFF);
 
+  /// Color: #FE3535
+  static const Color red = Color(0xFFFE3535);
+
   /// Color: #F4FAF6
   static const Color registerBackground = Color(0xFFF4FAF6);
 

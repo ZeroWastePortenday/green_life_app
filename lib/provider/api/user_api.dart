@@ -40,7 +40,7 @@ class UserApi {
     );
 
     if (result.statusCode == 201) {
-      Log.i(result.data);
+      GlobalData.nickname = nickname;
       return const Result.success(true);
     } else if (result.statusCode == 400) {
       return const Result.success(false); // 중복된 닉네임

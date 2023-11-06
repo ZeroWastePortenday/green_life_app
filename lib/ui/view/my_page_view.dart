@@ -7,6 +7,7 @@ import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
 import 'package:green_life_app/provider/app_version_provider.dart';
 import 'package:green_life_app/provider/delete_user/delete_user_provider.dart';
+import 'package:green_life_app/provider/global_data.dart';
 import 'package:green_life_app/provider/login/logout.dart';
 import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/ui/widgets/dialog/logout_dialog.dart';
@@ -19,8 +20,6 @@ class MyPageView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const nickname = '지구를지키자';
-
     ref.listen(deleteUserProvider, (previous, next) {
       next.whenOrNull(
         success: (data) {
@@ -38,14 +37,14 @@ class MyPageView extends ConsumerWidget {
           children: [
             TopBar(context),
             NormalDivider(),
-            WelcomeBox(nickname),
+            WelcomeBox(),
             MyPageTopButtons(ref),
             Divider(
               thickness: 8.h,
               height: 8.h,
               color: ColorName.greyF3,
             ),
-            MyPageBottomButtons(context, ref, nickname),
+            MyPageBottomButtons(context, ref),
           ],
         ),
       ),
@@ -90,8 +89,8 @@ class MyPageView extends ConsumerWidget {
     );
   }
 
-  Widget MyPageBottomButtons(
-      BuildContext context, WidgetRef ref, String nickname) {
+  Widget MyPageBottomButtons(BuildContext context, WidgetRef ref) {
+    final nickname = GlobalData.nickname;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
@@ -104,9 +103,13 @@ class MyPageView extends ConsumerWidget {
             textColor: ColorName.grey76,
           ),
           NormalDivider(),
-          MyPageButton('계정삭제', onTap: () {
-            showDeleteUserDialog(context, nickname, ref);
-          }, textColor: ColorName.grey76),
+          MyPageButton(
+            '계정삭제',
+            onTap: () {
+              showDeleteUserDialog(context, nickname, ref);
+            },
+            textColor: ColorName.grey76,
+          ),
           NormalDivider(),
         ],
       ),
@@ -114,7 +117,10 @@ class MyPageView extends ConsumerWidget {
   }
 
   void showDeleteUserDialog(
-      BuildContext context, String nickname, WidgetRef ref) {
+    BuildContext context,
+    String nickname,
+    WidgetRef ref,
+  ) {
     showDialog<bool>(
       context: context,
       builder: (context) {
@@ -225,7 +231,7 @@ class MyPageView extends ConsumerWidget {
     );
   }
 
-  Widget WelcomeBox(String nickname) {
+  Widget WelcomeBox() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
       child: Container(
@@ -241,7 +247,7 @@ class MyPageView extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$nickname님',
+                  '${GlobalData.nickname}님',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

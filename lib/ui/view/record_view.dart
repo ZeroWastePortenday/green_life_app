@@ -1,30 +1,234 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_life_app/gen/assets.gen.dart';
 import 'package:green_life_app/gen/colors.gen.dart';
+import 'package:green_life_app/models/result.dart';
+import 'package:green_life_app/models/score/monthly_record.dart';
+import 'package:green_life_app/provider/mission/get_monthly_record_provider.dart';
 import 'package:green_life_app/routes.dart';
 import 'package:green_life_app/ui/widgets/top_bar_divider.dart';
 import 'package:green_life_app/utils/strings.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
-class RecordView extends StatefulWidget {
+class RecordView extends ConsumerStatefulWidget {
   const RecordView({super.key});
 
   @override
-  State<RecordView> createState() => _RecordViewState();
+  ConsumerState<RecordView> createState() => _RecordViewState();
 }
 
-class _RecordViewState extends State<RecordView> {
+class _RecordViewState extends ConsumerState<RecordView> {
   DateTime selectedDate = DateTime.now();
+  
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 100), () {
+      ref.read(getMonthlyRecordProvider.notifier).getRecordByMonth(selectedDate);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO API selectedDate 값에 따라 조회하기
-    const dayCount = 28;
-    const averageScore = 78;
-    const overFiftyPercentCount = 12;
-    const overEightyPercentCount = 10;
+    final monthlyRecord = ref.watch(getMonthlyRecordProvider);
+    if (monthlyRecord is Success<MonthlyRecord>) {
+      return _buildSuccessWidget(context, monthlyRecord.data);
+    } else if (monthlyRecord is Error<MonthlyRecord>) {
+      return _buildErrorWidget(context, monthlyRecord.message);
+    } else {
+      return _buildLoadingWidget(context);
+    }
+  }
+
+  Widget ScoresWidget(
+    int dayCount,
+    double averageScore,
+  ) {
+    return Container(
+      width: double.infinity,
+      height: 80.h,
+      decoration: BoxDecoration(
+        border: Border.all(color: ColorName.greyEA),
+        borderRadius: BorderRadius.all(Radius.circular(4.r)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: ColoredBox(
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 20.h,
+                    child: Center(
+                      child: Text(
+                        '미션 실천일',
+                        style: TextStyle(
+                          color: ColorName.grey94,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 7.h),
+                    child: Text(
+                      '$dayCount일',
+                      style: TextStyle(
+                        color: ColorName.grey94,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Container(
+            width: 1,
+            height: 52.h,
+            color: ColorName.greyEA,
+          ),
+          Expanded(
+            child: ColoredBox(
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 20.h,
+                    child: Center(
+                      child: Text(
+                        '평균점수',
+                        style: TextStyle(
+                          color: ColorName.grey94,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 7.h),
+                    child: Text(
+                      '${averageScore.toInt()}점',
+                      style: TextStyle(
+                        color: ColorName.grey94,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  SizedBox TitleText() {
+    return SizedBox(
+      height: 30.h,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          '이번달 기록 모아보기',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: 16.sp,
+          ),
+        ),
+      ),
+    );
+  }
+
+  ColoredBox TopBar(BuildContext context) {
+    final todayYearMonth = getYearMonth(dateTime: selectedDate);
+    return ColoredBox(
+      color: Colors.white,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () {
+              showMonthPicker(
+                context: context,
+                initialDate: selectedDate,
+                dismissible: true,
+                headerColor: ColorName.primaryColor,
+                headerTextColor: Colors.white,
+                selectedMonthBackgroundColor: ColorName.primaryColor,
+                selectedMonthTextColor: Colors.white,
+                unselectedMonthTextColor: Colors.black,
+              ).then((date) {
+                if (date != null) {
+                  setState(() {
+                    selectedDate = date;
+                    getRecordByMonth(date);
+                  });
+                }
+              });
+            },
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: SvgPicture.asset(Assets.images.backButton),
+                ),
+                Text(
+                  todayYearMonth,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20.sp,
+                    height: 30 / 20,
+                  ),
+                ),
+                SizedBox(
+                  width: 8.w,
+                ),
+                Assets.images.calendarIcon.image(),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, Routes.myPage);
+            },
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: 8.h,
+                bottom: 27.h,
+                left: 20.h,
+                right: 20.h,
+              ),
+              child: SvgPicture.asset(Assets.images.mypageIcon),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void getRecordByMonth(DateTime date) {
+    ref.read(getMonthlyRecordProvider.notifier).getRecordByMonth(date);
+  }
+
+  Widget _buildSuccessWidget(BuildContext context, MonthlyRecord data) {
+    final dayCount = data.achievementDayCountByMonth;
+    final averageScore = data.averageScoreByMonth;
+    final overFiftyPercentCount = data.scoreCount50ByMonth;
+    final overEightyPercentCount = data.scoreCount80ByMonth;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -161,180 +365,11 @@ class _RecordViewState extends State<RecordView> {
     );
   }
 
-  Widget ScoresWidget(
-    int dayCount,
-    int averageScore,
-  ) {
-    return Container(
-      width: double.infinity,
-      height: 80.h,
-      decoration: BoxDecoration(
-        border: Border.all(color: ColorName.greyEA),
-        borderRadius: BorderRadius.all(Radius.circular(4.r)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Expanded(
-            child: ColoredBox(
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 20.h,
-                    child: Center(
-                      child: Text(
-                        '미션 실천일',
-                        style: TextStyle(
-                          color: ColorName.grey94,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 7.h),
-                    child: Text(
-                      '$dayCount일',
-                      style: TextStyle(
-                        color: ColorName.grey94,
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Container(
-            width: 1,
-            height: 52.h,
-            color: ColorName.greyEA,
-          ),
-          Expanded(
-            child: ColoredBox(
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 20.h,
-                    child: Center(
-                      child: Text(
-                        '평균점수',
-                        style: TextStyle(
-                          color: ColorName.grey94,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 7.h),
-                    child: Text(
-                      '$averageScore점',
-                      style: TextStyle(
-                        color: ColorName.grey94,
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+  Widget _buildErrorWidget(BuildContext context, String message) {
+    return const SizedBox.shrink();
   }
 
-  SizedBox TitleText() {
-    return SizedBox(
-      height: 30.h,
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          '이번달 기록 모아보기',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 16.sp,
-          ),
-        ),
-      ),
-    );
-  }
-
-  ColoredBox TopBar(BuildContext context) {
-    final todayYearMonth = getYearMonth(dateTime: selectedDate);
-    return ColoredBox(
-      color: Colors.white,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () {
-              showMonthPicker(
-                context: context,
-                initialDate: selectedDate,
-                dismissible: true,
-                headerColor: ColorName.primaryColor,
-                headerTextColor: Colors.white,
-                selectedMonthBackgroundColor: ColorName.primaryColor,
-                selectedMonthTextColor: Colors.white,
-                unselectedMonthTextColor: Colors.black,
-              ).then((date) {
-                if (date != null) {
-                  setState(() {
-                    selectedDate = date;
-                  });
-                }
-              });
-            },
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: SvgPicture.asset(Assets.images.backButton),
-                ),
-                Text(
-                  todayYearMonth,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20.sp,
-                    height: 30 / 20,
-                  ),
-                ),
-                SizedBox(
-                  width: 8.w,
-                ),
-                Assets.images.calendarIcon.image(),
-              ],
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, Routes.myPage);
-            },
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 8.h,
-                bottom: 27.h,
-                left: 20.h,
-                right: 20.h,
-              ),
-              child: SvgPicture.asset(Assets.images.mypageIcon),
-            ),
-          )
-        ],
-      ),
-    );
+  Widget _buildLoadingWidget(BuildContext context) {
+    return const SizedBox.shrink();
   }
 }

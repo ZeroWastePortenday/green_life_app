@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:green_life_app/models/mission/mission.dart';
 import 'package:green_life_app/models/net/api_result_list.dart';
 import 'package:green_life_app/models/result.dart';
+import 'package:green_life_app/models/score/monthly_record.dart';
 import 'package:green_life_app/models/score/today_score.dart';
 import 'package:green_life_app/provider/http_client_provider.dart';
 import 'package:green_life_app/utils/logger.dart';
@@ -95,5 +96,25 @@ class MissionApi {
     }
 
     return Result.error('code: ${result.statusCode}, 미션 초기화에 실패했습니다.');
+  }
+
+  Future<Result<MonthlyRecord>> getRecordByMonth(DateTime dateTime) async {
+    final year = dateTime.year.toString();
+    final month = dateTime.month.toString();
+
+    final result = await _dio.get(
+      '/v2/recordByMonth',
+      queryParameters: {
+        'year': year,
+        'month': month,
+      },
+      options: await getBaseHeaders(),
+    );
+
+    if (result.statusCode == 200) {
+      return Result.success(MonthlyRecord.fromDynamic(result.data));
+    }
+
+    return Result.error('code: ${result.statusCode}, 월별 기록을 가져오는데 실패했습니다.');
   }
 }

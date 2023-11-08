@@ -58,8 +58,7 @@ class LoginProvider extends StateNotifier<LoginState> {
     if (isSuccess) {
       userApi.when(
         data: (api) async {
-          final test = await api.checkUser();
-          test.whenOrNull(
+          (await api.checkUser()).whenOrNull(
             success: (data) {
               if (data == IsNewUser.isNew) {
                 state = LoginNeedToSignUpState();

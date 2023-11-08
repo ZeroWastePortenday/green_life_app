@@ -25,10 +25,20 @@ String getYearMonthDay(DateTime selected) {
 // get today's year and month
 String getYearMonth({DateTime? dateTime}) {
   dateTime ??= DateTime.now();
-  final year = dateTime.year.toString();
-  final month = dateTime.month.toString();
+  final year = getYearString(dateTime);
+  final month = getMonthString(dateTime);
   return '$year년 $month월';
 }
+
+String getDayString(DateTime dateTime) =>
+    dateTime.day.toString().padLeft(2, '0');
+
+String getMonthString2Length(DateTime dateTime) =>
+    dateTime.month.toString().padLeft(2, '0');
+
+String getMonthString(DateTime dateTime) => dateTime.month.toString();
+
+String getYearString(DateTime dateTime) => dateTime.year.toString();
 
 // 일요일 부터 월요일까지 요일만 String List로 반환
 List<String> getDayOfWeekList() {

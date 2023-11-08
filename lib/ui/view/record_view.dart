@@ -21,25 +21,68 @@ class RecordView extends ConsumerStatefulWidget {
 
 class _RecordViewState extends ConsumerState<RecordView> {
   DateTime selectedDate = DateTime.now();
-  
+
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 100), () {
-      ref.read(getMonthlyRecordProvider.notifier).getRecordByMonth(selectedDate);
+      getRecordByMonth(selectedDate);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final monthlyRecord = ref.watch(getMonthlyRecordProvider);
-    if (monthlyRecord is Success<MonthlyRecord>) {
-      return _buildSuccessWidget(context, monthlyRecord.data);
-    } else if (monthlyRecord is Error<MonthlyRecord>) {
-      return _buildErrorWidget(context, monthlyRecord.message);
-    } else {
-      return _buildLoadingWidget(context);
-    }
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            TopBar(context),
+            NormalDivider(),
+            Builder(
+              builder: (_) {
+                if (monthlyRecord is Success<MonthlyRecord>) {
+                  return realBody(monthlyRecord.data);
+                } else if (monthlyRecord is Error<MonthlyRecord>) {
+                  return _buildErrorWidget(context, monthlyRecord.message);
+                } else {
+                  return _buildLoadingWidget(context);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+      bottomSheet: Padding(
+        padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 60.h),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Container(
+            width: double.infinity,
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.r),
+              color: Colors.white,
+              border: Border.all(color: ColorName.primaryColor),
+            ),
+            child: Center(
+              child: Text(
+                '메인으로 돌아가기',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  color: ColorName.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget ScoresWidget(
@@ -85,7 +128,7 @@ class _RecordViewState extends ConsumerState<RecordView> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -128,7 +171,7 @@ class _RecordViewState extends ConsumerState<RecordView> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -214,7 +257,7 @@ class _RecordViewState extends ConsumerState<RecordView> {
               ),
               child: SvgPicture.asset(Assets.images.mypageIcon),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -224,143 +267,104 @@ class _RecordViewState extends ConsumerState<RecordView> {
     ref.read(getMonthlyRecordProvider.notifier).getRecordByMonth(date);
   }
 
-  Widget _buildSuccessWidget(BuildContext context, MonthlyRecord data) {
+  Padding realBody(MonthlyRecord data) {
     final dayCount = data.achievementDayCountByMonth;
     final averageScore = data.averageScoreByMonth;
     final overFiftyPercentCount = data.scoreCount50ByMonth;
     final overEightyPercentCount = data.scoreCount80ByMonth;
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            TopBar(context),
-            NormalDivider(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-              child: Column(
-                children: [
-                  TitleText(),
-                  SizedBox(height: 20.h),
-                  ScoresWidget(dayCount, averageScore),
-                  SizedBox(height: 20.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 80.h,
-                          decoration: BoxDecoration(
-                            color: ColorName.primaryLightColor,
-                            border: Border.all(color: ColorName.primaryColor),
-                            borderRadius: BorderRadius.all(Radius.circular(4.r)),
-                          ),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 20.h,
-                                  child: Center(
-                                    child: Text(
-                                      '50점 이상',
-                                      style: TextStyle(
-                                        color: ColorName.grey94,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 7.h),
-                                Text(
-                                  '$overFiftyPercentCount회',
-                                  style: TextStyle(
-                                    color: ColorName.primaryColor,
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 10.w),
-                      Expanded(
-                        child: Container(
-                          height: 80.h,
-                          decoration: BoxDecoration(
-                            color: ColorName.greenBackground,
-                            border: Border.all(color: ColorName.green),
-                            borderRadius: BorderRadius.all(Radius.circular(4.r)),
-                          ),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 20.h,
-                                  child: Center(
-                                    child: Text(
-                                      '50점 이상',
-                                      style: TextStyle(
-                                        color: ColorName.grey94,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 7.h),
-                                Text(
-                                  '$overEightyPercentCount회',
-                                  style: TextStyle(
-                                    color: ColorName.green,
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+      child: Column(
+        children: [
+          TitleText(),
+          SizedBox(height: 20.h),
+          ScoresWidget(dayCount, averageScore),
+          SizedBox(height: 20.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Container(
+                  height: 80.h,
+                  decoration: BoxDecoration(
+                    color: ColorName.primaryLightColor,
+                    border: Border.all(color: ColorName.primaryColor),
+                    borderRadius: BorderRadius.all(Radius.circular(4.r)),
                   ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-      bottomSheet: Padding(
-        padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 60.h),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            width: double.infinity,
-            height: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.r),
-              color: Colors.white,
-              border: Border.all(color: ColorName.primaryColor),
-            ),
-            child: Center(
-              child: Text(
-                '메인으로 돌아가기',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  color: ColorName.primaryColor,
-                  fontWeight: FontWeight.bold,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 20.h,
+                          child: Center(
+                            child: Text(
+                              '50점 이상',
+                              style: TextStyle(
+                                color: ColorName.grey94,
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 7.h),
+                        Text(
+                          '$overFiftyPercentCount회',
+                          style: TextStyle(
+                            color: ColorName.primaryColor,
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: Container(
+                  height: 80.h,
+                  decoration: BoxDecoration(
+                    color: ColorName.greenBackground,
+                    border: Border.all(color: ColorName.green),
+                    borderRadius: BorderRadius.all(Radius.circular(4.r)),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 20.h,
+                          child: Center(
+                            child: Text(
+                              '50점 이상',
+                              style: TextStyle(
+                                color: ColorName.grey94,
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 7.h),
+                        Text(
+                          '$overEightyPercentCount회',
+                          style: TextStyle(
+                            color: ColorName.green,
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
+        ],
       ),
     );
   }

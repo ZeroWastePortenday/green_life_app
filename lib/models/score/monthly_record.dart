@@ -24,4 +24,5 @@ class MonthlyRecord {
   final int scoreCount80ByMonth;
 
   Map<String, dynamic> toJson() => _$MonthlyRecordToJson(this);
+
 }

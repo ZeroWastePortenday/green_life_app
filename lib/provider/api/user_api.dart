@@ -66,9 +66,7 @@ class UserApi {
       '/v1/user',
       options: await getBaseHeaders(),
     );
-    if (result.statusCode == 200) {
-      return const Result.success(true);
-    }
-    return Result.error('회원탈퇴에 실패했습니다: ${result.data}');
+
+    return Result.getExpected(result, true, '회원탈퇴에 실패했습니다.');
   }
 }

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:green_life_app/models/api_data.dart';
 
 part 'api_result_list.g.dart';
 
@@ -9,8 +10,10 @@ class ApiResultList {
   factory ApiResultList.fromJson(Map<String, dynamic> json) =>
       _$ApiResultListFromJson(json);
 
-  factory ApiResultList.fromDynamic(dynamic data) =>
-      ApiResultList.fromJson(data as Map<String, dynamic>);
+  static List<T> fromDynamic<T>(dynamic data, ApiData<T> fromDynamic) {
+    final jsonList = ApiResultList.fromJson(data as Map<String, dynamic>);
+    return (jsonList.data!).map(fromDynamic).toList();
+  }
 
   final int? status;
   final String? message;

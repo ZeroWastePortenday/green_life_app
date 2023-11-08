@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:green_life_app/models/mission/mission.dart';
 import 'package:green_life_app/provider/api/mission_api.dart';
+import 'package:green_life_app/utils/strings.dart';
 
 final registerCheckProvider =
     StateNotifierProvider<RegisterCheckProvider, List<Mission?>>(
@@ -31,10 +32,9 @@ class RegisterCheckProvider extends StateNotifier<List<Mission?>> {
   void load(DateTime selectedDateTime, {void Function()? hasAnswered}) {
     missionApi.whenOrNull(
       data: (api) {
-        final date =
-            '${selectedDateTime.year}'
-            '${selectedDateTime.month.toString().padLeft(2, '0')}'
-            '${selectedDateTime.day.toString().padLeft(2, '0')}';
+        final date = getYearString(selectedDateTime) +
+            getMonthString2Length(selectedDateTime) +
+            getDayString(selectedDateTime);
         api.getMissionList(date).then((result) {
           result.whenOrNull(
             success: (data) {

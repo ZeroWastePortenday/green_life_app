@@ -32,9 +32,7 @@ class RegisterCheckProvider extends StateNotifier<List<Mission?>> {
   void load(DateTime selectedDateTime, {void Function()? hasAnswered}) {
     missionApi.whenOrNull(
       data: (api) {
-        final date = getYearString(selectedDateTime) +
-            getMonthString2Length(selectedDateTime) +
-            getDayString(selectedDateTime);
+        final date = get_yyyy_mm_dd_dateString(selectedDateTime);
         api.getMissionList(date).then((result) {
           result.whenOrNull(
             success: (data) {
@@ -48,6 +46,13 @@ class RegisterCheckProvider extends StateNotifier<List<Mission?>> {
         });
       },
     );
+  }
+
+  String get_yyyy_mm_dd_dateString(DateTime selectedDateTime) {
+    final date = getYearString(selectedDateTime) +
+        getMonthString2Length(selectedDateTime) +
+        getDayString(selectedDateTime);
+    return date;
   }
 
   bool get hasAllAnswer => state.every((element) => element?.answer != null);

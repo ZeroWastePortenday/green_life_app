@@ -32,9 +32,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   }
 
   void getTodayMissionAfter100ms() {
-    Future.delayed(const Duration(milliseconds: 100), () {
-      loadTodayMission();
-    });
+    Future.delayed(const Duration(milliseconds: 100), loadTodayMission);
   }
 
   @override
@@ -409,8 +407,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
       setState(() {
         if (time != null) {
           selectedTime = time;
-          ref.read(getTodayMissionProvider.notifier).getSelectedDateMission(
-                selectedTime);
+          ref
+              .read(getTodayMissionProvider.notifier)
+              .getSelectedDateMission(selectedTime);
         }
       });
     });

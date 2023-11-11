@@ -57,20 +57,7 @@ class LoginProvider extends StateNotifier<LoginState> {
   void sendResult(bool isSuccess) {
     if (isSuccess) {
       userApi.when(
-        data: (api) async {
-          (await api.checkUser()).whenOrNull(
-            success: (data) {
-              if (data == IsNewUser.isNew) {
-                state = LoginNeedToSignUpState();
-              } else {
-                api.login().then((value) => state = value);
-              }
-            },
-            error: (message) {
-              Log.e(message);
-            },
-          );
-        },
+        data: checkUser,
         loading: () {
           state = LoginLoadingState();
         },
@@ -81,6 +68,30 @@ class LoginProvider extends StateNotifier<LoginState> {
     } else {
       Log.e('login fail');
       state = LoginErrorState('login fail');
+    }
+  }
+
+  Future<void> checkUser(UserApi api) async {
+    (await api.checkUser()).whenOrNull(
+      success: (data) {
+        setToSignUpStateIfNewUser(data);
+        loginIfIsNotNewUser(data, api);
+      },
+      error: (message) {
+        Log.e(message);
+      },
+    );
+  }
+
+  void loginIfIsNotNewUser(IsNewUser data, UserApi api) {
+    if (data != IsNewUser.isNew) {
+      api.login().then((value) => state = value);
+    }
+  }
+
+  void setToSignUpStateIfNewUser(IsNewUser data) {
+    if (data == IsNewUser.isNew) {
+      state = LoginNeedToSignUpState();
     }
   }
 

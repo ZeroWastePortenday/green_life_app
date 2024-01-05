@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
-import 'package:green_life_app/provider/login/create _firebase_custom_token.dart';
+import 'package:green_life_app/provider/login/create_firebase_custom_token.dart';
 import 'package:green_life_app/utils/logger.dart';
 
 class Naver {
